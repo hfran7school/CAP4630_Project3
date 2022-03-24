@@ -15,9 +15,9 @@ TODO:
 #labels
 lb_binAtr = tk.Label(root, text="Binary Attributes").grid(row=0, column=0)
 lb_hardConstr = tk.Label(root, text="Hard Constraints").grid(row=0, column=1)
-#entry(placeholder)
-e_binAtr = tk.Entry(root).grid(row=1, column=0)
-e_hardConstr = tk.Entry(root).grid(row=1, column=1)
+#Listbox(placeholder)
+lbox_binAtr = tk.Listbox(root).grid(row=1, column=0)
+lbox_hardConstr = tk.Listbox(root).grid(row=1, column=1)
 
 
 """Preference Logic Rows
@@ -29,10 +29,10 @@ TODO:
 lb_Pen = tk.Label(root, text="Penalty Logic").grid(row=2, column=0)
 lb_Poss = tk.Label(root, text="Possibilistic Logic").grid(row=2,column=1)
 lb_Qual = tk.Label(root, text="Qualitative Choice Logic").grid(row=2, column=2)
-#entries(placeholder)
-e_Pen = tk.Entry(root).grid(row=3, column=0)
-e_Poss = tk.Entry(root).grid(row=3, column=1)
-e_Qual = tk.Entry(root).grid(row=3, column=2)
+#listboxes(placeholder)
+lbox_Pen = tk.Listbox(root).grid(row=3, column=0)
+lbox_Poss = tk.Listbox(root).grid(row=3, column=1)
+lbox_Qual = tk.Listbox(root).grid(row=3, column=2)
 
 """Feasable Objects Row
 TODO:
@@ -40,7 +40,7 @@ TODO:
 """
 #labels
 lb_obj = tk.Label(root, text="Feasible Objects").grid(row=4,column=0)
-#entries(placeholder)
-e_obj = tk.Entry(root).grid(row=5, column=0)
+#listboxes(placeholder)
+lbox_obj = tk.Listbox(root).grid(row=5, column=0)
 
 root.mainloop()
