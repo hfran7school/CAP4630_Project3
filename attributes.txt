@@ -11,9 +11,9 @@ V6 / V8
 off-road / on-road
 
 ** attribute format
-o0 : 0000000000
-o1 : 0000000001
-o2 : 0000000010
+o0  : 0000000000
+o1  : 0000000001
+o2  : 0000000010
 o15 : 0000001111
 
 ** hard constraints
@@ -24,11 +24,10 @@ no power windows AND no gps
 four wheel drive AND 5L
 V8 AND 5L
 
-
 ** preference rules
 if leather, four seater > six seater
 if four wheel drive, hybrid > electric
 if six seater, 5L > 3.8L
-if power windows, gps > no gps
+gps > no gps
 if off road, hybrid > electric
 if off road, automatic AND V8 > manual AND V8 > manual AND V6
