@@ -10,6 +10,12 @@ automatic / manual
 V6 / V8
 off-road / on-road
 
+** attribute format
+o0 : 0000000000
+o1 : 0000000001
+o2 : 0000000010
+o15 : 0000001111
+
 ** hard constraints
 electric AND automatic
 electric AND power windows
