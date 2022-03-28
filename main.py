@@ -38,9 +38,9 @@ top.grid(row=0, column=0) #top frame to help align with preferences row
 
 """START BINARY CONSTRAITS"""
 #binary attribute frames
-binAtr_frame = tk.LabelFrame(top, text="Binary Attributes")
-binAtr_frame2 = tk.LabelFrame(binAtr_frame)
-binAtr_frame.grid(row=0, column=0)
+binAtr_frame = tk.LabelFrame(top, text="Binary Attributes", padx=10, pady=10)
+binAtr_frame2 = tk.Frame(binAtr_frame)
+binAtr_frame.grid(row=0, column=0, padx=10)
 binAtr_frame2.grid(row=0, column=2, sticky='ns')
 
 #binary attribute frame 1
@@ -73,9 +73,9 @@ binAtr_openFile.grid(row=5, column=0)
 
 """HARD CONSTRAITS"""
 #hard constraints frames
-hardConstr_frame = tk.LabelFrame(top, text="Hard Constraints")
-hardConstr_frame2 = tk.LabelFrame(hardConstr_frame)
-hardConstr_frame.grid(row=0, column=1)
+hardConstr_frame = tk.LabelFrame(top, text="Hard Constraints", padx=10, pady=10)
+hardConstr_frame2 = tk.Frame(hardConstr_frame)
+hardConstr_frame.grid(row=0, column=1, padx=10)
 hardConstr_frame2.grid(row=0, column=2, sticky='ns')
 
 #frame1
@@ -99,10 +99,8 @@ hardConstr_file.grid(row=3, column=0)
 """END HARD CONSTRAINTS"""
 
 """FEASIBLE OBJECTS"""
-feasObj_frame = LabelFrame(top, text="Feasible Objects")
-feasObj_frame2 = LabelFrame(feasObj_frame)
+feasObj_frame = LabelFrame(top, text="Feasible Objects", padx=10, pady=10)
 feasObj_frame.grid(row=0, column=3)
-feasObj_frame2.grid(row=0, column=1, sticky='ns')
 
 feasObj_lbox = Listbox(feasObj_frame)
 feasObj_lbox.grid(row=0, column=0)
@@ -112,14 +110,14 @@ feasObj_lbox['yscrollcommand'] = feasObj_scroll.set
 """END FEASIBLE OBJECTS"""
 
 """PREFERENCES"""
-pref_frame = LabelFrame(root, text="Preferences")
+pref_frame = LabelFrame(root, text="Preferences", bd='5', pady=5)
 pref_frame.grid(row=1, column=0)
 
 """PENALTY (PREFERENCE 1)"""
 #penalty frames
-pen_frame = LabelFrame(pref_frame, text="Penalty Logic")
-pen_frame2 = LabelFrame(pen_frame)
-pen_frame.grid(row=0, column=0)
+pen_frame = LabelFrame(pref_frame, text="Penalty Logic", padx=10, pady=10)
+pen_frame2 = Frame(pen_frame)
+pen_frame.grid(row=0, column=0, padx=10)
 pen_frame2.grid(row=0, column=2,sticky='ns')
 
 #penalty frame1
@@ -148,9 +146,9 @@ pen_file.grid(row=3, column=0)
 
 """POSSIBILISTIC (PREFERENCE 2)"""
 #possibilistic frames
-poss_frame = LabelFrame(pref_frame, text="Possibilistic Logic")
-poss_frame2 = LabelFrame(poss_frame)
-poss_frame.grid(row=0, column=1)
+poss_frame = LabelFrame(pref_frame, text="Possibilistic Logic", padx=10, pady=10)
+poss_frame2 = Frame(poss_frame)
+poss_frame.grid(row=0, column=1, padx=10)
 poss_frame2.grid(row=0, column=2,sticky='ns')
 
 #possibilistic frame1
@@ -179,9 +177,9 @@ poss_file.grid(row=3, column=0)
 
 """QUALITATIVE (PREFERENCE 3)"""
 #qualitative frames
-qual_frame = LabelFrame(pref_frame, text="Possibilistic Logic")
-qual_frame2 = LabelFrame(qual_frame)
-qual_frame.grid(row=0, column=2)
+qual_frame = LabelFrame(pref_frame, text="Possibilistic Logic", padx=10, pady=10)
+qual_frame2 = Frame(qual_frame)
+qual_frame.grid(row=0, column=2, padx=10)
 qual_frame2.grid(row=0, column=2,sticky='ns')
 
 #qualitiative frame1
