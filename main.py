@@ -4,16 +4,34 @@ import tkinter as tk
 from tkinter import *
 import pyclasp as clasp
 
+root = tk.Tk()
+root.title("CAP4630 Project 3")
+
 """METHOD DEFINITIONS"""
-#open window test
-#def exemplify():
-#    exemp_win = Toplevel(root)
-#    exemp_win.title("Child")
-#    Label(exemp_win, text="Testing").pack()
+#pop up window for exemplify
+def exemplify():
+    exemp_win = Toplevel(taskFrame)
+    exemp_win.title("Exemplify")
+    # TODO: create layout for exemplify
+
+#pop up window for optimize
+def optimize():
+    op_win = Toplevel(taskFrame)
+    op_win.title("Optimize")
+    # TODO: create layout for optimize
+
+#pop up window for omni-optimize
+def omni():
+    omni_win = Toplevel(taskFrame)
+    omni_win.title("Omni-Optimize")
+    # TODO: create layout for omni-optimize
+
+#TODO: implement methods for add buttons
+#TODO: implement commands for open file buttons
+#TODO: implement method for Reset button
+
 
 """END METHOD DEFINITIONS"""
-
-root = tk.Tk()
 
 top = Frame(root)
 top.grid(row=0, column=0) #top frame to help align with preferences row
@@ -189,18 +207,25 @@ qual_file.grid(row=3, column=0)
 """END PREFERENCE"""
 
 #buttons for the other tasks
+taskFrame = Frame(root)
+taskFrame.grid(row=2, column=0)
 
-bottom = Frame(root)
-bottom.grid(row=2, column=0)
-
-b_exemplify = Button(bottom, text="Exemplify",command=exemplify())
-b_optimize = Button(bottom, text="Optimize")
-b_omni = Button(bottom, text="Omni-Optimize")
+b_exemplify = Button(taskFrame, text="Exemplify",command=exemplify)
+b_optimize = Button(taskFrame, text="Optimize", command=optimize)
+b_omni = Button(taskFrame, text="Omni-Optimize", command=omni)
 
 b_exemplify.grid(row=0, column=0)
 b_optimize.grid(row=0, column=1)
 b_omni.grid(row=0, column=2)
 
+#exit and reset
+exitFrame = Frame(root)
+exitFrame.grid(row=3, column=0)
+
+b_quit = Button(exitFrame, text="Quit", command=root.destroy)
+b_reset = Button(exitFrame, text="Reset")
+b_reset.grid(row=0,column=0)
+b_quit.grid(row=0,column=1)
 
 
 root.mainloop()
