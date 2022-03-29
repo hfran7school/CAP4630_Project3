@@ -2,10 +2,21 @@ import subprocess as sp
 
 class Logic:
 
+    def determinePenaltyPreference(self, objects: list[str], rules: list):
+        """Returns a list of tuples of objects, where the earlier in the list an object appears, the more preferred it is.\n
+        objects : the objects to apply the rules to, formatted as binary strings\n
+        rules : the rules to run the objects against"""
+        # for each object
+            # for each rule
+                # if object satisfies rule
+                    # object penalty = 0
+                # else
+                    # object
+
     def penaltyLogic(self, rule):
         """Determines if an object conforms to a penalty logic rule. Returns 0 if it does, the penalty value otherwise."""
 
-    def probabilisticLogic(self, rule):
+    def possiblisticLogic(self, rule):
         """Determines if an object conforms to a probabilistic logic rule. Returns 1 if it does, the probabilistic value
         otherwise."""
 
@@ -13,9 +24,10 @@ class Logic:
         """Determines if an object conforms to a qualitative logic rule. Returns the number of the first rule the object
         conforms to, inf if no rules apply."""
 
-    def createFeasibleObjects(self, constraints):
-        """Returns a list of all feasible objects, represented in binary\n
-        constraints : cnf file, formatted as a string, containing the constraints to use"""
+    def createFeasibleObjects(self, constraints: str) -> list[str]:
+        """Returns a list of all feasible objects, represented as binary strings. If no feasible objects are possible, return []\n
+        constraints : cnf file, formatted as a string, containing the constraints to use\n
+        ** Example use: createFeasibleObjects(\"p cnf 4 2\\\\n2 -3 0\\\\n-4 1 0\")"""
         # Create file using constraints
         fp = open('feasible.cnf', 'w')
         fp.write(constraints)
@@ -44,14 +56,14 @@ class Logic:
             attributes = i.split()
             for j in attributes:
                 if j[0] == "-":
-                    tempC += "1"
-                else:
                     tempC += "0"
+                else:
+                    tempC += "1"
             objects.append(tempC)
 
         return objects
 
-    def createAllObjects(self, numAttr):
+    def createAllObjects(self, numAttr: int) -> list[str]:
         """Returns a list of all objects possible, in string format, not considering the constraints\n
         attr : number of attributes"""
         # Create .cnf file to print all models

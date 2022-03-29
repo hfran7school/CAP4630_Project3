@@ -1,9 +1,6 @@
-# tkinter is already installed to pycharm. idk if pyclasp is too, but if it's not you can install it fairly easily
-# just hover over the red squiggly line and ask pycharm to install it, if you need to
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-import pyclasp as clasp
 
 attrFile = open("attributes.txt", "w")
 hardConstrFile = open("constraints.txt","w")
