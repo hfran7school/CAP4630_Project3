@@ -1,1 +1,35 @@
-s: s, s
+=======
+** attributes
+1. two wheel drive / four wheel drive
+2. hybrid / electirc
+3. power windows / no power windows
+4. gps / no gps
+5. 3.8L / 5L
+6. four seater / six seater
+7. leather interior / canvas interior
+8. automatic / manual
+9. V6 / V8
+10.off-road / on-road
+
+** attribute format
+o0  : 0000000000
+o1  : 0000000001
+o2  : 0000000010
+o15 : 0000001111
+
+** hard constraints
+electric AND automatic (-2 ^ 8) => (2 || -8)
+electric AND power windows (-2 ^ 3) => (2 || -3)
+electric AND gps (-2 ^ 4) => (2 || -4)
+no power windows AND no gps (-3 ^ -4) => (3 || 4)
+four wheel drive AND 5L (-1 ^-5) => (1 || 5)
+V8 AND 5L (-9 ^ -5) => (9 || 5)
+
+** preference rules
+if leather, four seater > six seater
+if four wheel drive, hybrid > electric
+if six seater, 5L > 3.8L
+gps > no gps
+if off road, hybrid > electric
+if off road, automatic AND V8 > manual AND V8 > manual AND V6
+>>>>>>> 0d6a9065ee28a8abf5fa833e0cdf1c430ea08dab
