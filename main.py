@@ -2,12 +2,18 @@
 # just hover over the red squiggly line and ask pycharm to install it, if you need to
 import tkinter as tk
 from tkinter import *
+from tkinter import messagebox
 import pyclasp as clasp
+
+attrFile = open("attributes.txt", "w")
+hardConstrFile = open("constraints.txt","w")
+
+
 
 root = tk.Tk()
 root.title("CAP4630 Project 3")
 
-"""METHOD DEFINITIONS"""
+"""TASK METHOD DEFINITIONS"""
 #pop up window for exemplify
 def exemplify():
     exemp_win = Toplevel(taskFrame)
@@ -26,7 +32,30 @@ def omni():
     omni_win.title("Omni-Optimize")
     # TODO: create layout for omni-optimize
 
+"""END TASK METHOD DEFINITIONS"""
+
+"""ADD BUTTON DEFINITIONS"""
 #TODO: implement methods for add buttons
+def binAtr_add():
+    userAtr = binAtr_entr_attr.get()
+    userOp1 = binAtr_entr_op1.get()
+    userOp2 = binAtr_entr_op2.get()
+    if userAtr != "" and userOp1 != "" and userOp2 != "":
+        statement = userAtr + ": " + userOp1 + ", " + userOp2 + "\n"
+        try:
+            with open("attributes.txt", "a") as attrFile:
+                attrFile.write(statement)
+        except FileNotFoundError:
+            print("The attributes.txt does not exist")
+    else:
+        messagebox.showinfo("ERROR: Binary Attributes","Please fill in all entries before entering a binary attribute.")
+    
+
+
+"""END ADD BUTTON DEFINITIONS"""
+
+    
+
 #TODO: implement commands for open file buttons
 #TODO: implement method for Reset button
 
@@ -57,8 +86,9 @@ binAtr_lb_op2 = tk.Label(binAtr_frame2, text = "Option 2")
 binAtr_entr_attr = tk.Entry(binAtr_frame2)
 binAtr_entr_op1 = tk.Entry(binAtr_frame2)
 binAtr_entr_op2 = tk.Entry(binAtr_frame2)
-binAtr_add = tk.Button(binAtr_frame2, text="Add Attribute")
-binAtr_openFile = tk.Button(binAtr_frame2, text="Open File")
+
+binAtr_addButton = tk.Button(binAtr_frame2, text="Add Attribute", command=binAtr_add)
+binAtr_openFileButton = tk.Button(binAtr_frame2, text="Open File")
 
 #binary attribute frame 2 (placements)
 binAtr_lb_attr.grid(row=0,column=0)
@@ -67,8 +97,8 @@ binAtr_lb_op1.grid(row=2, column=0)
 binAtr_entr_op1.grid(row=3,column=0)
 binAtr_lb_op2.grid(row=2, column=2)
 binAtr_entr_op2.grid(row=3,column=2)
-binAtr_add.grid(row=4, column=0)
-binAtr_openFile.grid(row=5, column=0)
+binAtr_addButton.grid(row=4, column=0)
+binAtr_openFileButton.grid(row=5, column=0)
 """END binary Attributes"""
 
 """HARD CONSTRAITS"""
@@ -88,13 +118,13 @@ hardConstr_lbox['yscrollcommand'] = hardConstr_scroll.set
 #frame2
 hardConstr_lb_constr = tk.Label(hardConstr_frame2, text="Constraint")
 hardConstr_entr_constr = tk.Entry(hardConstr_frame2)
-hardConstr_add = tk.Button(hardConstr_frame2, text="Add Constraint")
+hardConstr_addButton = tk.Button(hardConstr_frame2, text="Add Constraint")
 hardConstr_file = tk.Button(hardConstr_frame2, text="Open File")
 
 #frame2 fill
 hardConstr_lb_constr.grid(row=0, column=0)
 hardConstr_entr_constr.grid(row=1, column=0)
-hardConstr_add.grid(row=2, column=0)
+hardConstr_addButton.grid(row=2, column=0)
 hardConstr_file.grid(row=3, column=0)
 """END HARD CONSTRAINTS"""
 
