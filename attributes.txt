@@ -1,1 +1,0 @@
-*using this for storing binary attributes file

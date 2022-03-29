@@ -8,6 +8,8 @@ import pyclasp as clasp
 attrFile = open("attributes.txt", "w")
 hardConstrFile = open("constraints.txt","w")
 
+BA_Options = [] #binaryAttributes
+
 
 
 root = tk.Tk()
@@ -38,19 +40,37 @@ def omni():
 #TODO: implement methods for add buttons
 def binAtr_add():
     userAtr = binAtr_entr_attr.get()
+    userAtr = userAtr.replace(" ","-")
     userOp1 = binAtr_entr_op1.get()
+    userOp1 = userOp1.replace(" ","-")
     userOp2 = binAtr_entr_op2.get()
+    userOp2 = userOp2.replace(" ","-")
     if userAtr != "" and userOp1 != "" and userOp2 != "":
-        statement = userAtr + ": " + userOp1 + ", " + userOp2 + "\n"
         try:
+            statement = userAtr + ": " + userOp1 + ", " + userOp2 + "\n"
             with open("attributes.txt", "a") as attrFile:
                 attrFile.write(statement)
+                binAtr_lbox.insert(END, statement)
+                BA_Options.append(userOp1)
+                BA_Options.append(userOp2)
         except FileNotFoundError:
             print("The attributes.txt does not exist")
     else:
         messagebox.showinfo("ERROR: Binary Attributes","Please fill in all entries before entering a binary attribute.")
     
-
+def hardConstr_add():
+    userHardConstr = hardConstr_entr_constr.get()
+    if userHardConstr != "":
+        userHC_list = userHardConstr.split(" ")
+        for curr in userHC_list:
+            if curr == "NOT" or curr == "AND" or curr == "OR":
+                continue
+            elif curr in BA_Options:
+                continue
+            else:
+                 messagebox.showinfo("ERROR: Hard Constraints","Constraint contains options that don't exist in the current attributes.")
+    else:
+        messagebox.showinfo("ERROR: Hard Constraints","Please enter in a constraint.")
 
 """END ADD BUTTON DEFINITIONS"""
 
@@ -73,7 +93,7 @@ binAtr_frame.grid(row=0, column=0, padx=10)
 binAtr_frame2.grid(row=0, column=2, sticky='ns')
 
 #binary attribute frame 1
-binAtr_lbox = tk.Listbox(binAtr_frame)
+binAtr_lbox = tk.Listbox(binAtr_frame, width=50)
 binAtr_lbox.grid(row=0,column=0)
 binAtr_scroll = Scrollbar(binAtr_frame, orient='vertical', command=binAtr_lbox.yview)
 binAtr_scroll.grid(row=0, column=1, sticky='ns')
@@ -118,14 +138,16 @@ hardConstr_lbox['yscrollcommand'] = hardConstr_scroll.set
 #frame2
 hardConstr_lb_constr = tk.Label(hardConstr_frame2, text="Constraint")
 hardConstr_entr_constr = tk.Entry(hardConstr_frame2)
-hardConstr_addButton = tk.Button(hardConstr_frame2, text="Add Constraint")
-hardConstr_file = tk.Button(hardConstr_frame2, text="Open File")
+
+#buttons
+hardConstr_addButton = tk.Button(hardConstr_frame2, text="Add Constraint", command=hardConstr_add)
+hardConstr_fileButton = tk.Button(hardConstr_frame2, text="Open File")
 
 #frame2 fill
 hardConstr_lb_constr.grid(row=0, column=0)
 hardConstr_entr_constr.grid(row=1, column=0)
 hardConstr_addButton.grid(row=2, column=0)
-hardConstr_file.grid(row=3, column=0)
+hardConstr_fileButton.grid(row=3, column=0)
 """END HARD CONSTRAINTS"""
 
 """FEASIBLE OBJECTS"""
