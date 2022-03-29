@@ -11,7 +11,10 @@ class Logic:
                 # if object satisfies rule
                     # object penalty = 0
                 # else
-                    # object
+                    # object penalty = rule[2] (aka rule penalty)
+        # for each object
+            # tuple together with
+
 
     def penaltyLogic(self, rule):
         """Determines if an object conforms to a penalty logic rule. Returns 0 if it does, the penalty value otherwise."""
@@ -50,18 +53,18 @@ class Logic:
         solns[tempA] = tempB[0]
 
         # Create objects
-        objects = []
-        for i in solns:
-            tempC = ""
-            attributes = i.split()
-            for j in attributes:
-                if j[0] == "-":
-                    tempC += "0"
-                else:
-                    tempC += "1"
-            objects.append(tempC)
+        # objects = []
+        # for i in solns:
+        #     tempC = ""
+        #     attributes = i.split()
+        #     for j in attributes:
+        #         if j[0] == "-":
+        #             tempC += "0"
+        #         else:
+        #             tempC += "1"
+        #     objects.append(tempC)
 
-        return objects
+        return solns
 
     def createAllObjects(self, numAttr: int) -> list[str]:
         """Returns a list of all objects possible, in string format, not considering the constraints\n
