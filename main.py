@@ -74,6 +74,20 @@ def hardConstr_add():
 
 """END ADD BUTTON DEFINITIONS"""
 
+"""RESET METHOD"""
+def reset():
+    #preference file would go on this line
+    attrFile = open("attributes.txt", "w")
+    hardConstrFile = open("constraints.txt","w")
+    #preference file would go on this line
+    binAtr_lbox.delete(0,END)
+    hardConstr_lbox.delete(0,END)
+    pen_lbox.delete(0,END)
+    poss_lbox.delete(0,END)
+    qual_lbox.delete(0,END)
+
+"""END RESET METHOD"""
+
     
 
 #TODO: implement commands for open file buttons
@@ -273,7 +287,7 @@ exitFrame = Frame(root)
 exitFrame.grid(row=3, column=0)
 
 b_quit = Button(exitFrame, text="Quit", command=root.destroy)
-b_reset = Button(exitFrame, text="Reset")
+b_reset = Button(exitFrame, text="Reset", command=reset)
 b_reset.grid(row=0,column=0)
 b_quit.grid(row=0,column=1)
 
