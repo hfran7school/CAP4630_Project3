@@ -34,9 +34,9 @@ def omni():
     # TODO: create layout for omni-optimize
 
 """END TASK METHOD DEFINITIONS"""
-def updateFeasObj():
-    hardConstr_list = hardConstr_lbox.get(0, END)
-    Logic.createFeasibleObjects(hardConstr_list)
+#def updateFeasObj():
+#    hardConstr_list = hardConstr_lbox.get(0, END)
+#    Logic.createFeasibleObjects(hardConstr_list)
 
 
 """ADD BUTTON DEFINITIONS"""
@@ -75,6 +75,12 @@ def hardConstr_add():
                  messagebox.showinfo("ERROR: Hard Constraints","Constraint contains options that don't exist in the current attributes.")
     else:
         messagebox.showinfo("ERROR: Hard Constraints","Please enter in a constraint.")
+    try:
+        hardConstrFile = open("constraints.txt", "a")
+        hardConstrFile.write(userHardConstr)
+    except FileNotFoundError:
+        print("constraints.txt does not exist.")
+    
 
 """END ADD BUTTON DEFINITIONS"""
 
@@ -173,7 +179,7 @@ feasObj_scroll = Scrollbar(feasObj_frame, orient='vertical', command=feasObj_lbo
 feasObj_scroll.grid(row=0, column=1, sticky='ns')
 feasObj_lbox['yscrollcommand'] = feasObj_scroll.set
 
-feasObj_updateButton = Button(feasObj_frame, text="Update", command=updateFeasObj)
+feasObj_updateButton = Button(feasObj_frame, text="Update")#,)command=updateFeasObj)
 feasObj_updateButton.grid(row=0,column=2)
 """END FEASIBLE OBJECTS"""
 
