@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
 import inputs
-import preferenceLogic
+from preferenceLogic import Logic as brain
 
 #TODO:
 # - fix feasible objects update button
@@ -11,7 +11,6 @@ import preferenceLogic
 # - ALL OF optimize
 # - ALL OF omni
 # - add X-axis scrollbars to all listboxes
-
 
 attrFile = open("attributes.txt", "w")
 attrFile.close()
