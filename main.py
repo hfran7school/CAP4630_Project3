@@ -1,16 +1,18 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
+from preferenceLogic import Logic
+
 
 attrFile = open("attributes.txt", "w")
 hardConstrFile = open("constraints.txt","w")
 
 BA_Options = [] #binaryAttributes
 
-
-
 root = tk.Tk()
 root.title("CAP4630 Project 3")
+
+"""METHOD DEFINITIONS"""
 
 """TASK METHOD DEFINITIONS"""
 #pop up window for exemplify
@@ -32,6 +34,10 @@ def omni():
     # TODO: create layout for omni-optimize
 
 """END TASK METHOD DEFINITIONS"""
+def updateFeasObj():
+    hardConstr_list = hardConstr_lbox.get(0, END)
+    Logic.createFeasibleObjects(hardConstr_list)
+
 
 """ADD BUTTON DEFINITIONS"""
 #TODO: implement methods for add buttons
@@ -57,6 +63,7 @@ def binAtr_add():
     
 def hardConstr_add():
     userHardConstr = hardConstr_entr_constr.get()
+    hardConstr_lbox.insert(END, userHardConstr)
     if userHardConstr != "":
         userHC_list = userHardConstr.split(" ")
         for curr in userHC_list:
@@ -84,11 +91,6 @@ def reset():
     qual_lbox.delete(0,END)
 
 """END RESET METHOD"""
-
-    
-
-#TODO: implement commands for open file buttons
-#TODO: implement method for Reset button
 
 
 """END METHOD DEFINITIONS"""
@@ -170,6 +172,9 @@ feasObj_lbox.grid(row=0, column=0)
 feasObj_scroll = Scrollbar(feasObj_frame, orient='vertical', command=feasObj_lbox.yview)
 feasObj_scroll.grid(row=0, column=1, sticky='ns')
 feasObj_lbox['yscrollcommand'] = feasObj_scroll.set
+
+feasObj_updateButton = Button(feasObj_frame, text="Update", command=updateFeasObj)
+feasObj_updateButton.grid(row=0,column=2)
 """END FEASIBLE OBJECTS"""
 
 """PREFERENCES"""
