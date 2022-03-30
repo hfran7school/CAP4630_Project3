@@ -1,13 +1,16 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-import inputs
+#import inputs
+#import preferenceLogic
 
 
 attrFile = open("attributes.txt", "w")
 attrFile.close()
 hardConstrFile = open("constraints.txt","w")
 hardConstrFile.close()
+penaltyFile = open("penalty.txt", "w")
+penaltyFile.close()
 
 BA_Options = [] #binaryAttributes
 
@@ -36,11 +39,13 @@ def omni():
     # TODO: create layout for omni-optimize
 
 """END TASK METHOD DEFINITIONS"""
-#def updateFeasObj():
-    
+def updateFeasObj():
+     print("update")
+#     with open ('constraints.txt') as constrfile:
+#         inputs.
+
 
 """ERROR CHECKING"""
-
 def check_valid(test, qual):
     comparison_next = False
     item_next = True
@@ -157,10 +162,30 @@ def hardConstr_add():
             hardConstrFile.write(userHardConstr)
             hardConstrFile.write("\n")
             hardConstr_lbox.insert(END, userHardConstr)
+            hardConstr_entr_constr.delete(0,END)
         except FileNotFoundError:
             print("constraints.txt does not exist.")
 
 #TODO: add penalty
+def pen_add():
+    userPenalty = pen_entr_pref.get()
+    userValue = pen_entr_val.get()
+    if userValue.isnumeric() == False:
+        messagebox.showinfo("ERROR: Non-numeric Value", "Please enter an integer value for the \"Value\" field.")
+    else:
+        result = check_valid(userPenalty, False)
+        if result == 0:
+            try:
+                statement = userPenalty + ", " + str(userValue)
+                PenaltyFile = open("penalty.txt", "a")
+                PenaltyFile.write(statement)
+                PenaltyFile.write("\n")
+                PenaltyFile.close()
+                pen_lbox.insert(END, statement)
+                pen_entr_pref.delete(0, END)
+                pen_entr_val.delete(0, END)
+            except FileNotFoundError:
+                print("constraints.txt does not exist.")
 #TODO: add poss
 #TODO: add qual
 
@@ -173,6 +198,8 @@ def reset():
     attrFile.close()
     hardConstrFile = open("constraints.txt","w")
     hardConstrFile.close()
+    penaltyFile = open("penalty.txt", "w")
+    penaltyFile.close()
     #preference file would go on this line
     binAtr_lbox.delete(0,END)
     hardConstr_lbox.delete(0,END)
@@ -263,7 +290,7 @@ feasObj_scroll = Scrollbar(feasObj_frame, orient='vertical', command=feasObj_lbo
 feasObj_scroll.grid(row=0, column=1, sticky='ns')
 feasObj_lbox['yscrollcommand'] = feasObj_scroll.set
 
-feasObj_updateButton = Button(feasObj_frame, text="Update")#,)command=updateFeasObj)
+feasObj_updateButton = Button(feasObj_frame, text="Update",command=updateFeasObj)
 feasObj_updateButton.grid(row=0,column=2)
 """END FEASIBLE OBJECTS"""
 
@@ -279,7 +306,7 @@ pen_frame.grid(row=0, column=0, padx=10)
 pen_frame2.grid(row=0, column=2,sticky='ns')
 
 #penalty frame1
-pen_lbox = Listbox(pen_frame)
+pen_lbox = Listbox(pen_frame, width=50)
 pen_lbox.grid(row=0, column=0)
 pen_scroll = Scrollbar(pen_frame, orient='vertical', command=pen_lbox.yview)
 pen_scroll.grid(row=0, column=1, sticky='ns')
@@ -290,7 +317,7 @@ pen_lb_pref = Label(pen_frame2, text="Preference")
 pen_lb_val = Label(pen_frame2, text="Value")
 pen_entr_pref = Entry(pen_frame2)
 pen_entr_val = Entry(pen_frame2)
-pen_add = Button(pen_frame2, text="Add Preference")
+pen_addButton = Button(pen_frame2, text="Add Preference", command=pen_add)
 pen_file = Button(pen_frame2, text="Open File")
 
 #penalty frame2 placements
@@ -298,7 +325,7 @@ pen_lb_pref.grid(row=0, column=0)
 pen_entr_pref.grid(row=1, column=0)
 pen_lb_val.grid(row=0, column=1)
 pen_entr_val.grid(row=1, column=1)
-pen_add.grid(row=2, column=0)
+pen_addButton.grid(row=2, column=0)
 pen_file.grid(row=3, column=0)
 """END PENALTY (PREFERENCE 1)"""
 
