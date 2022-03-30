@@ -48,9 +48,10 @@ def omni():
 
 """END TASK METHOD DEFINITIONS"""
 def updateFeasObj():
-     #print(inputs.constrfile)
-     #print(inputs.readconstr)
-     print("test")
+    claspObj = inputs.claspFeasObj()
+    #result = preferenceLogic.Logic.createFeasibleObjects(claspObj)
+    #print(result)
+
 
 
 """ERROR CHECKING"""
@@ -229,14 +230,16 @@ def poss_add():
 
 """RESET METHOD"""
 def reset():
-    #preference file would go on this line
+    #qualitiative choice logic file would go here
     attrFile = open("attributes.txt", "w")
     attrFile.close()
     hardConstrFile = open("constraints.txt","w")
     hardConstrFile.close()
     penaltyFile = open("penalty.txt", "w")
     penaltyFile.close()
-    #preference file would go on this line
+    possFile = open("possible.txt","w")
+    possFile.close()
+    #qualitiative choice logic file would go here
     binAtr_lbox.delete(0,END)
     hardConstr_lbox.delete(0,END)
     pen_lbox.delete(0,END)

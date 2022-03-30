@@ -3,54 +3,61 @@
 """
 
 " sets up the program to recognize attributes and their cnf numbers in the next files "
-with open ('attributes.txt') as attrfile:
-    count = 1
-    readattr = attrfile.readline()
-    attrnames = []
-    attributes = {}
-
-    while readattr != '':
-        parseattr = readattr.split(':')
-        head = parseattr[0]
-        if head in attrnames:
-            readattr = attrfile.readline()
-            continue
-        attrnames.append(head)
-        parseattr = parseattr[1].split(',')
-        attributes[parseattr[0]] = count
-        attributes[parseattr[1]] = -count
-        " incrementing & reseting "
-        count += 1
+def claspFeasObj():
+    with open ('attributes.txt') as attrfile:
+        count = 1
         readattr = attrfile.readline()
-        parseattr[:] = []
+        attrnames = []
+        attributes = {}
 
-" Hard constraints "
-with open ('constraints.txt') as constrfile:
-    countsave = count
-    count = 0
-    constraintcount = 0
-    readconstr = constrfile.readline()
-    textformat = ""
+        while readattr != '':
+            parseattr = readattr.split(':')
+            head = parseattr[0]
+            if head in attrnames:
+                readattr = attrfile.readline()
+                continue
+            attrnames.append(head)
+            parseattr = parseattr[1].split(',')
+            parseattr[0]=parseattr[0].replace(" ","")
+            parseattr[1]=parseattr[1].replace(" ","")
+            parseattr[0]=parseattr[0].replace("\n","")
+            parseattr[1]=parseattr[1].replace("\n","")
+            attributes[parseattr[0]] = count
+            attributes[parseattr[1]] = -count
+            " incrementing & reseting "
+            count += 1
+            readattr = attrfile.readline()
+            parseattr[:] = []
 
-    while readconstr != '':
-        parseconstr = readconstr.split()
-        if parseconstr[count] == "NOT":
-            count += 1
-            item1 = int(attributes[parseconstr[count]]) * -1
-            " made it an int so its easier to negate negatives "
-        item1 = attributes[parseconstr[count]]
-        count += 2
-        if parseconstr[count] == "NOT":
-            count += 1
-            item2 = int(attributes[parseconstr[count]]) * -1
-        item2 = attributes[parseconstr[count]]
-        textformat += str(item1) + " " + str(item2) + " 0"
+    " Hard constraints "
+    with open ('constraints.txt') as constrfile:
+        countsave = count
         count = 0
-        constraintcount += 1
-    " use for hard constraints "
-    textformatC = "p cnf " + str(countsave) + str(constraintcount) + textformat
-    " This is currently set up w/o new lines between each line. I can set it up to go out to a file -- just need to" \
-    " know how it's getting moved to fix it's output because it won't change much. "
+        constraintcount = 0
+        readconstr = constrfile.readline()
+        textformat = ""
+        
+        while readconstr != '':
+            parseconstr = readconstr.split()
+            if parseconstr[count] == "NOT":
+                count += 1
+                item1 = int(attributes[parseconstr[count]]) * -1
+                " made it an int so its easier to negate negatives "
+            item1 = attributes[parseconstr[count]]
+            count += 2
+            if parseconstr[count] == "NOT":
+                count += 1
+                item2 = int(attributes[parseconstr[count]]) * -1
+            item2 = attributes[parseconstr[count]]
+            textformat += str(item1) + " " + str(item2) + " 0 "
+            count = 0
+            constraintcount += 1
+            readconstr = constrfile.readline()
+        " use for hard constraints "
+        textformatC = "p cnf " + str(countsave) + " " +  str(constraintcount) + " " + textformat
+        return textformatC
+        " This is currently set up w/o new lines between each line. I can set it up to go out to a file -- just need to" \
+        " know how it's getting moved to fix it's output because it won't change much. "
 
 # with open('preferences.txt') as preffile:
 #     lastnot = False
