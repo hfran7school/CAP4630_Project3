@@ -38,6 +38,90 @@ def omni():
 #    hardConstr_list = hardConstr_lbox.get(0, END)
 #    Logic.createFeasibleObjects(hardConstr_list)
 
+"""ERROR CHECKING"""
+
+def check_valid(test, qual):
+    comparison_next = False
+    item_next = True
+    not_item = False
+    if_item = False
+    for item in test.split():
+        if item == "NOT":
+            if not_item:
+                error_checking(1)
+                return 1
+            elif comparison_next:
+                error_checking(2)
+                return 1
+            not_item = True
+        elif item == "AND" or item == "OR":
+            if item_next:
+                error_checking(3)
+                return 1
+            elif if_item:
+                error_checking(8)
+                return 1
+            comparison_next = False
+            item_next = True
+        elif (item == "BT" or item == "IF") and not qual:
+            error_checking(7)
+            return 1
+        elif item == "BT":
+            if item_next:
+                error_checking(3)
+                return 1
+            comparison_next = False
+            item_next = True
+            if_item = False
+        elif item == "IF":
+            if item_next:
+                error_checking(3)
+                return 1
+            comparison_next = False
+            item_next = True
+            if_item = True
+        elif item in BA_Options:
+            if comparison_next:
+                error_checking(4)
+                return 1
+            comparison_next = True
+            item_next = False
+            not_item = False
+        else:
+            error_checking(5)
+            return 1
+    if item_next:
+        error_checking(6)
+        return 1
+    else:
+        return 0
+
+
+def error_checking(num):
+    if num == 1:
+        messagebox.showinfo("ERROR: Syntax", "There cannot be more than two NOT statements used in a row.")
+        return
+    elif num == 2:
+        messagebox.showinfo("ERROR: Syntax", "There cannot be a NOT statement before a comparison.")
+        return
+    elif num == 3:
+        messagebox.showinfo("ERROR: Syntax", "There cannot be two comparisons in a row.")
+        return
+    elif num == 4:
+        messagebox.showinfo("ERROR: Syntax", "There cannot be two items in a row.")
+        return
+    elif num == 5:
+        messagebox.showinfo("ERROR: Syntax", "The item name does not correlate to any attributes.")
+        return
+    elif num == 6:
+        messagebox.showinfo("ERROR: Syntax", "There cannot be unresolved comparisons.")
+        return
+    elif num == 7:
+        messagebox.showinfo("ERROR: Syntax", "BT and IF statements can only be used in qualitative logic rules.")
+        return
+    elif num == 8:
+        messagebox.showinfo("ERROR: Syntax", "Comparisons cannot be made for conditions.")
+        return
 
 """ADD BUTTON DEFINITIONS"""
 #TODO: implement methods for add buttons
