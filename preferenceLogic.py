@@ -1,9 +1,10 @@
 import subprocess as sp
+import os
 
 class Logic:
 
     def determinePenaltyPreference(self, objects: list[str], rules: list):
-        """Returns a list of tuples of objects, where the earlier in the list an object appears, the more preferred it is.\n
+        """Returns a list of tuples of objects, where the earlier in the list an object appears, the more preferred it is. This function uses penalty logic.\n
         objects : the objects to apply the rules to, formatted as binary strings\n
         rules : the rules to run the objects against"""
         # Determine the penalties of each object
@@ -42,7 +43,7 @@ class Logic:
         return result
 
     def determinePossibilisticPreference(self, objects: list[str], rules: list):
-        """Returns a list of tuples of objects, where the earlier in the list an object appears, the more preferred it is.\n
+        """Returns a list of tuples of objects, where the earlier in the list an object appears, the more preferred it is. This function uses possibilistic logic.\n
         objects : the objects to apply the rules to, formatted as binary strings\n
         rules : the rules to run the objects against"""
         # Determine the possibilities of each object
@@ -88,6 +89,7 @@ class Logic:
         return result
 
     def findIndex(self, list, search):
+        """Returns the index of a value in a list, or -1 if it can't be found"""
         a = 0;
         for i in list:
             if i == search:
@@ -176,15 +178,15 @@ class Logic:
         solns[tempA] = tempB[0]
 
         # Generate objects
-        objects = []
-        for i in solns:
-            tempC = ""
-            attributes = i.split()
-            for j in attributes:
-                if j[0] == "-":
-                    tempC += "1"
-                else:
-                    tempC += "0"
-            objects.append(tempC)
+        # objects = []
+        # for i in solns:
+        #     tempC = ""
+        #     attributes = i.split()
+        #     for j in attributes:
+        #         if j[0] == "-":
+        #             tempC += "1"
+        #         else:
+        #             tempC += "0"
+        #     objects.append(tempC)
 
-        return objects
+        return solns
