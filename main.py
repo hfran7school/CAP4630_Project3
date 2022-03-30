@@ -1,8 +1,8 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-#import inputs
-#import preferenceLogic
+import inputs
+import preferenceLogic
 
 #TODO:
 # - fix feasible objects update button
@@ -48,9 +48,9 @@ def omni():
 
 """END TASK METHOD DEFINITIONS"""
 def updateFeasObj():
-     print("update")
-#     with open ('constraints.txt') as constrfile:
-#         inputs.
+     #print(inputs.constrfile)
+     #print(inputs.readconstr)
+     print("test")
 
 
 """ERROR CHECKING"""
@@ -194,7 +194,6 @@ def pen_add():
             except FileNotFoundError:
                 print("constraints.txt does not exist.")
 
-#TODO: add poss
 def poss_add():
     userPoss = poss_entr_pref.get()
     userValue = poss_entr_val.get()
