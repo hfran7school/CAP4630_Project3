@@ -1,11 +1,13 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-from preferenceLogic import Logic
+import inputs
 
 
 attrFile = open("attributes.txt", "w")
+attrFile.close()
 hardConstrFile = open("constraints.txt","w")
+hardConstrFile.close()
 
 BA_Options = [] #binaryAttributes
 
@@ -35,8 +37,7 @@ def omni():
 
 """END TASK METHOD DEFINITIONS"""
 #def updateFeasObj():
-#    hardConstr_list = hardConstr_lbox.get(0, END)
-#    Logic.createFeasibleObjects(hardConstr_list)
+    
 
 """ERROR CHECKING"""
 
@@ -96,7 +97,6 @@ def check_valid(test, qual):
     else:
         return 0
 
-
 def error_checking(num):
     if num == 1:
         messagebox.showinfo("ERROR: Syntax", "There cannot be more than two NOT statements used in a row.")
@@ -124,7 +124,6 @@ def error_checking(num):
         return
 
 """ADD BUTTON DEFINITIONS"""
-#TODO: implement methods for add buttons
 def binAtr_add():
     userAtr = binAtr_entr_attr.get()
     userAtr = userAtr.replace(" ","-")
@@ -137,9 +136,13 @@ def binAtr_add():
             statement = userAtr + ": " + userOp1 + ", " + userOp2 + "\n"
             with open("attributes.txt", "a") as attrFile:
                 attrFile.write(statement)
+                attrFile.close()
                 binAtr_lbox.insert(END, statement)
                 BA_Options.append(userOp1)
                 BA_Options.append(userOp2)
+                binAtr_entr_attr.delete(0, END)
+                binAtr_entr_op1.delete(0,END)
+                binAtr_entr_op2.delete(0,END)
         except FileNotFoundError:
             print("The attributes.txt does not exist")
     else:
@@ -147,24 +150,19 @@ def binAtr_add():
     
 def hardConstr_add():
     userHardConstr = hardConstr_entr_constr.get()
-    hardConstr_lbox.insert(END, userHardConstr)
-    if userHardConstr != "":
-        userHC_list = userHardConstr.split(" ")
-        for curr in userHC_list:
-            if curr == "NOT" or curr == "AND" or curr == "OR":
-                continue
-            elif curr in BA_Options:
-                continue
-            else:
-                 messagebox.showinfo("ERROR: Hard Constraints","Constraint contains options that don't exist in the current attributes.")
-    else:
-        messagebox.showinfo("ERROR: Hard Constraints","Please enter in a constraint.")
-    try:
-        hardConstrFile = open("constraints.txt", "a")
-        hardConstrFile.write(userHardConstr)
-    except FileNotFoundError:
-        print("constraints.txt does not exist.")
-    
+    result = check_valid(userHardConstr, False)
+    if result == 0:
+        try:
+            hardConstrFile = open("constraints.txt", "a")
+            hardConstrFile.write(userHardConstr)
+            hardConstrFile.write("\n")
+            hardConstr_lbox.insert(END, userHardConstr)
+        except FileNotFoundError:
+            print("constraints.txt does not exist.")
+
+#TODO: add penalty
+#TODO: add poss
+#TODO: add qual
 
 """END ADD BUTTON DEFINITIONS"""
 
@@ -172,7 +170,9 @@ def hardConstr_add():
 def reset():
     #preference file would go on this line
     attrFile = open("attributes.txt", "w")
+    attrFile.close()
     hardConstrFile = open("constraints.txt","w")
+    hardConstrFile.close()
     #preference file would go on this line
     binAtr_lbox.delete(0,END)
     hardConstr_lbox.delete(0,END)

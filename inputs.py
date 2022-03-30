@@ -25,7 +25,7 @@ with open ('attributes.txt') as attrfile:
         parseattr[:] = []
 
 " Hard constraints "
-with open ('hardconstraints.txt') as constrfile:
+with open ('constraints.txt') as constrfile:
     countsave = count
     count = 0
     constraintcount = 0
@@ -52,37 +52,37 @@ with open ('hardconstraints.txt') as constrfile:
     " This is currently set up w/o new lines between each line. I can set it up to go out to a file -- just need to" \
     " know how it's getting moved to fix it's output because it won't change much. "
 
-with open('preferences.txt') as preffile:
-    lastnot = False
-    count = 0
-    preferencecount = 0
-    readpref = preffile.readline()
-    preftuples = []
-    textformat = ""
+# with open('preferences.txt') as preffile:
+#     lastnot = False
+#     count = 0
+#     preferencecount = 0
+#     readpref = preffile.readline()
+#     preftuples = []
+#     textformat = ""
 
-    while readpref != '':
-        " If it has a comma then it's either penalty or possibilistic "
-        if readpref.contains(','):
-            parsepref = readpref.split(',')
-            numsave = parsepref[1]
-            for term in parsepref:
-                if term == "NOT":
-                    lastnot = True
-                elif lastnot:
-                    item = int(attributes[term]) * -1
-                    textformat += item
-                    lastnot = False
-                elif term == "AND":
-                    textformat += " 0"
-                elif term == "OR":
-                    textformat += " "
-                else:
-                    textformat += attributes[term]
-                preferencecount += 1
-            textformatC = "p cnf " + str(countsave) + str(preferencecount) + textformat
-            t = textformatC, numsave
-            preftuples.append(t)
-            " Unsure how to have it formatted but the cnf form and number associated are present "
-        elif true:
-            a = 0
-        " I don't know how to format the cnf for qualitative logic "
+#     while readpref != '':
+#         " If it has a comma then it's either penalty or possibilistic "
+#         if readpref.contains(','):
+#             parsepref = readpref.split(',')
+#             numsave = parsepref[1]
+#             for term in parsepref:
+#                 if term == "NOT":
+#                     lastnot = True
+#                 elif lastnot:
+#                     item = int(attributes[term]) * -1
+#                     textformat += item
+#                     lastnot = False
+#                 elif term == "AND":
+#                     textformat += " 0"
+#                 elif term == "OR":
+#                     textformat += " "
+#                 else:
+#                     textformat += attributes[term]
+#                 preferencecount += 1
+#             textformatC = "p cnf " + str(countsave) + str(preferencecount) + textformat
+#             t = textformatC, numsave
+#             preftuples.append(t)
+#             " Unsure how to have it formatted but the cnf form and number associated are present "
+#         elif true:
+#             a = 0
+#         " I don't know how to format the cnf for qualitative logic "
