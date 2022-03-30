@@ -4,6 +4,14 @@ from tkinter import messagebox
 #import inputs
 #import preferenceLogic
 
+#TODO:
+# - fix feasible objects update button
+# - write to qualitative objects file from user input
+# - ALL OF exemplify
+# - ALL OF optimize
+# - ALL OF omni
+# - add X-axis scrollbars to all listboxes
+
 
 attrFile = open("attributes.txt", "w")
 attrFile.close()
@@ -166,7 +174,6 @@ def hardConstr_add():
         except FileNotFoundError:
             print("constraints.txt does not exist.")
 
-#TODO: add penalty
 def pen_add():
     userPenalty = pen_entr_pref.get()
     userValue = pen_entr_val.get()
@@ -186,7 +193,37 @@ def pen_add():
                 pen_entr_val.delete(0, END)
             except FileNotFoundError:
                 print("constraints.txt does not exist.")
+
 #TODO: add poss
+def poss_add():
+    userPoss = poss_entr_pref.get()
+    userValue = poss_entr_val.get()
+    val = False
+    try:
+        userValue = float(userValue)
+        if(userValue > 1 or userValue < 0):
+            messagebox.showinfo("ERROR: Non-numeric Value", "Please enter an decimal value between 0 and 1 for the \"Value\" field.")
+            val = False
+        else: 
+            val = True
+    except:
+         messagebox.showinfo("ERROR: Non-numeric Value", "Please enter a valid decimal for the \"Value\" field.")
+         val = False
+
+    if val == True:
+        result = check_valid(userPoss, False)
+        if result == 0:
+            try:
+                statement = userPoss + ", " + str(userValue)
+                PossibleFile = open("possible.txt", "a")
+                PossibleFile.write(statement)
+                PossibleFile.write("\n")
+                PossibleFile.close()
+                poss_lbox.insert(END, statement)
+                poss_entr_pref.delete(0, END)
+                poss_entr_val.delete(0, END)
+            except FileNotFoundError:
+                print("constraints.txt does not exist.")
 #TODO: add qual
 
 """END ADD BUTTON DEFINITIONS"""
@@ -348,7 +385,7 @@ poss_lb_pref = Label(poss_frame2, text="Preference")
 poss_lb_val = Label(poss_frame2, text="Value")
 poss_entr_pref = Entry(poss_frame2)
 poss_entr_val = Entry(poss_frame2)
-poss_add = Button(poss_frame2, text="Add Preference")
+poss_addButton = Button(poss_frame2, text="Add Preference", command=poss_add)
 poss_file = Button(poss_frame2, text="Open File")
 
 #possibilistic placements
@@ -356,7 +393,7 @@ poss_lb_pref.grid(row=0, column=0)
 poss_entr_pref.grid(row=1, column=0)
 poss_lb_val.grid(row=0, column=1)
 poss_entr_val.grid(row=1, column=1)
-poss_add.grid(row=2, column=0)
+poss_addButton.grid(row=2, column=0)
 poss_file.grid(row=3, column=0)
 """END POSSIBILISTIC (PREFERENCE 2)"""
 
