@@ -17,6 +17,7 @@ attrOptions = [] #list of options for each attribute seperated by a comma
 hardConstraints = [] #list of hard constraints (string)
 pref_penalty = [] #list of penalty logic
 pref_possible = [] #list of possiblistic logic
+pref_qualitative = [] #list of qualitative logic
 
 root = tk.Tk()
 root.title("CAP4630 Project 3")
@@ -43,10 +44,10 @@ def omni():
     # TODO: create layout for omni-optimize
 
 """END TASK METHOD DEFINITIONS"""
-#def updateFeasObj():
-    #claspObj = inputs.claspFeasObj()
-    #result = preferenceLogic.Logic.createFeasibleObjects(claspObj)
-    #print(result)
+# def updateFeasObj():
+#      claspObj = inputs.getFeasObjClasp(attrOptions) #return a string for clasp using the using a list in the "option1,option2" format
+#      feasibleObjects = brain.createFeasibleObjects(claspObj)
+#      # would place feasible objects into a list of objects as well as the GUI
 
 """ERROR CHECKING"""
 def check_valid(test, qual):
@@ -199,12 +200,20 @@ def poss_add():
             poss_entr_pref.delete(0, END)
             poss_entr_val.delete(0, END)
 
-#TODO: add qual
+def qual_add():
+    userQual = qual_entr_pref.get()
+    result = check_valid(userQual, True)
+    if result == 0:
+        pref_qualitative.append(userQual)
+        qual_lbox.insert(END, userQual)
+        qual_entr_pref.delete(0,END)
 
-#update File
+#TODO: add qual
+"""END ADD BUTTON DEFINITIONS"""
+
+"""UPDATE WITH FILE INFO"""
 def updateAttr():
     with open ('attributes.txt') as attrfile:
-        count = 1
         readattr = attrfile.readline()
         attrnames = []
 
@@ -226,26 +235,44 @@ def updateAttr():
             binAtr_lbox.insert(END, statement)
             attrOptions.append(options)
             " incrementing & reseting "
-            count += 1
             readattr = attrfile.readline()
             parseattr[:] = []
-    #print(attrOptions)
+    print(attrOptions)
         
+def updateHardConstr():
+        with open ('constraints.txt') as constrfile:
+            readconstr = constrfile.readline()
+            while readconstr != '':
+                readconstr = readconstr.replace("\n","")
+                hardConstraints.append(readconstr)
+                hardConstr_lbox.insert(END, readconstr)
+                readconstr = constrfile.readline()
+    #print(hardConstraints)
 
-"""END ADD BUTTON DEFINITIONS"""
+def updatePenalty():
+    with open("penalty.txt") as penFile:
+        readPen = penFile.readline()
+        while readPen != '':
+            readPen = readPen.replace("\n","")
+            pen_lbox.insert(END, readPen)
+            penParse = readPen.split(",")
+            penParse[1] = penParse[1].replace(" ","")
+            readPen = penParse[0] + "," + penParse[1]
+            print(readPen)
+            pref_penalty.append(readPen)
+            readPen = penFile.readline()
+    print(pref_penalty)
+
+"""END UPDATE WITH FILE INFO"""
 
 """RESET METHOD"""
 def reset():
-    #qualitiative choice logic file would go here
-    attrFile = open("attributes.txt", "w")
-    attrFile.close()
-    hardConstrFile = open("constraints.txt","w")
-    hardConstrFile.close()
-    penaltyFile = open("penalty.txt", "w")
-    penaltyFile.close()
-    possFile = open("possible.txt","w")
-    possFile.close()
-    #qualitiative choice logic file would go here
+    BA_Options = [] #for error checking if the option name already exists
+    attrOptions = [] #list of options for each attribute seperated by a comma
+    hardConstraints = [] #list of hard constraints (string)
+    pref_penalty = [] #list of penalty logic
+    pref_possible = [] #list of possiblistic logic
+    pref_qual = [] #list of qualitative logic
     binAtr_lbox.delete(0,END)
     hardConstr_lbox.delete(0,END)
     pen_lbox.delete(0,END)
@@ -316,7 +343,7 @@ hardConstr_entr_constr = tk.Entry(hardConstr_frame2)
 
 #buttons
 hardConstr_addButton = tk.Button(hardConstr_frame2, text="Add Constraint", command=hardConstr_add)
-hardConstr_fileButton = tk.Button(hardConstr_frame2, text="Open File")
+hardConstr_fileButton = tk.Button(hardConstr_frame2, text="Update with File Info", command=updateHardConstr)
 
 #frame2 fill
 hardConstr_lb_constr.grid(row=0, column=0)
@@ -363,7 +390,7 @@ pen_lb_val = Label(pen_frame2, text="Value")
 pen_entr_pref = Entry(pen_frame2)
 pen_entr_val = Entry(pen_frame2)
 pen_addButton = Button(pen_frame2, text="Add Preference", command=pen_add)
-pen_file = Button(pen_frame2, text="Open File")
+pen_fileButton = Button(pen_frame2, text="Update with File Info", command=updatePenalty)
 
 #penalty frame2 placements
 pen_lb_pref.grid(row=0, column=0)
@@ -371,7 +398,7 @@ pen_entr_pref.grid(row=1, column=0)
 pen_lb_val.grid(row=0, column=1)
 pen_entr_val.grid(row=1, column=1)
 pen_addButton.grid(row=2, column=0)
-pen_file.grid(row=3, column=0)
+pen_fileButton.grid(row=3, column=0)
 """END PENALTY (PREFERENCE 1)"""
 
 """POSSIBILISTIC (PREFERENCE 2)"""
@@ -422,13 +449,13 @@ qual_lbox['yscrollcommand'] = qual_scroll.set
 #qualitiative frame2
 qual_lb_pref = Label(qual_frame2, text="Preference")
 qual_entr_pref = Entry(qual_frame2)
-qual_add = Button(qual_frame2, text="Add Preference")
+qual_addButton = Button(qual_frame2, text="Add Preference", command=qual_add)
 qual_file = Button(qual_frame2, text="Open File")
 
 #qualitative frame2 placements
 qual_lb_pref.grid(row=0, column=0)
 qual_entr_pref.grid(row=1, column=0)
-qual_add.grid(row=2, column=0)
+qual_addButton.grid(row=2, column=0)
 qual_file.grid(row=3, column=0)
 """END QUALITATIVE (PREFERENCE 3)"""
 
