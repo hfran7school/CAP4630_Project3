@@ -15,6 +15,7 @@ class Inputs:
         numattributes = int(len(attr) / 2)
         numclauses = 0
         textformat = ""
+        lastnot = False
         for constr in constraints:
             if textformat != "":
                 textformat += "\n"
@@ -45,6 +46,7 @@ class Inputs:
         numclauses = 1
         textformat = ""
         logictuples = []
+        lastnot = False
         for lines in logicLines:
             parselogic = lines.split(',')
             numsave = str(parselogic[1])
@@ -70,93 +72,49 @@ class Inputs:
             numclauses = 1
         return logictuples  # Returns list of tuples in format of [(cnfstring, value), ...]
 
-
-# # All of below will receive the cnf dictionary and string representing the contents of the file
-# " Hard constraints "
-# with open ('hardconstraints.txt') as constrfile: # Will return a string representing the cnf file
-#     countsave = count
-#     count = 0
-#     constraintcount = 0
-#     readconstr = constrfile.readline()
-#     textformat = ""
-#
-#     while readconstr != '':
-#         parseconstr = readconstr.split()
-#         for term in parsepref:
-#             if term == "NOT":
-#                 lastnot = True
-#             elif lastnot:
-#                 item = int(attributes[term]) * -1
-#                 textformat += str(item)
-#                 lastnot = False
-#             elif term == "AND":
-#                 textformat += " 0\n"
-#             elif term == "OR":
-#                 textformat += " "
-#             else:
-#                 textformat += attributes[term]
-#             preferencecount += 1
-#     # CNF form text for hard constraints.
-#     ConstraintCNF = "p cnf " + str(countsave) + " " + str(preferencecount) + "\n" + textformat + " 0"
-# " Penalty logic "
-# with open('penalty.txt') as penfile:
-#     lastnot = False
-#     preferencecount = 0
-#     readpen = penfile.readline()
-#     pentuples = []
-#     textformat = ""
-#
-#     while readpen != '':
-#         parsepref = readpen.split(',')
-#         numsave = parsepref[1]
-#         for term in parsepref:
-#             if term == "NOT":
-#                 lastnot = True
-#             elif lastnot:
-#                 item = int(attributes[term]) * -1
-#                 textformat += item
-#                 lastnot = False
-#             elif term == "AND":
-#                 textformat += " 0\n"
-#             elif term == "OR":
-#                 textformat += " "
-#             else:
-#                 textformat += attributes[term]
-#             preferencecount += 1
-#         PenaltyCNF = "p cnf " + str(countsave) + " " + str(preferencecount) + "\n" + textformat + " 0"
-#         t = PenaltyCNF, numsave
-#         # pentuples is a list of tuples -- The tuples contain 2 strings each with the first being the CNF and the
-#         # second being the value associated with penalty
-#         pentuples.append(t)
-#         readpen = penfile.readline()
-# " Possibilistic Logic "
-# with open('possibilistic.txt') as possfile:
-#     lastnot = False
-#     preferencecount = 0
-#     readposs = possfile.readline()
-#     posstuples = []
-#     textformat = ""
-#
-#     while readposs != '':
-#         parsepref = readposs.split(',')
-#         numsave = parsepref[1]
-#         for term in parsepref:
-#             if term == "NOT":
-#                 lastnot = True
-#             elif lastnot:
-#                 item = int(attributes[term]) * -1
-#                 textformat += item
-#                 lastnot = False
-#             elif term == "AND":
-#                 textformat += " 0\n"
-#             elif term == "OR":
-#                 textformat += " "
-#             else:
-#                 textformat += attributes[term]
-#             preferencecount += 1
-#         textformatC = "p cnf " + str(countsave) + " " + str(preferencecount) + "\n" + textformat + " 0"
-#         t = textformatC, numsave
-#         # posstuples is a list of tuples -- The tuples contain 2 strings each with the first being the CNF and the
-#         # second being the value associated with possibilistic logic
-#         posstuples.append(t)
-#         readposs = possfile.readline()
+# Used for QUALITATIVE logic
+    def cnfQualitative(self, qualLines: list, cnfDict: dict):
+        numattr = int(len(cnfDict) / 2)
+        numclauses = 1
+        qualnum = 1
+        textformat = ""
+        qualtuples = []
+        lastnot = False
+        for lines in qualLines:
+            if lines.endswith("IF"):
+                condition = "0"
+                qualitems = lines.split("IF")
+                quallist = qualitems.split()
+            else:
+                qualitems = lines.split("IF")
+                condition = str(cnfDict[qualitems[1]])
+                quallist = qualitems[0].split()
+            for term in quallist:
+                if term == "NOT":
+                    lastnot = True
+                elif lastnot:
+                    item = int(cnfDict[term]) * -1
+                    textformat += str(item)
+                    lastnot = False
+                elif term == "AND":
+                    textformat += " 0\n"
+                    numclauses += 1
+                elif term == "OR":
+                    textformat += " "
+                elif term == "BT":
+                    cnfQual = "p cnf " + str(numattr) + " " + str(numclauses) + "\n" + textformat + " 0"
+                    t = cnfQual, str(qualnum), condition
+                    qualtuples.append(t)
+                    textformat = ""
+                    qualnum += 1
+                    numclauses = 1
+                else:
+                    textformat += str(cnfDict[term])
+            cnfQual = "p cnf " + str(numattr) + " " + str(numclauses) + "\n" + textformat + " 0"
+            t = cnfQual, str(qualnum), condition
+            qualtuples.append(t)
+            textformat = ""
+            qualnum = 1
+            numclauses = 1
+        return qualtuples  # Returns list of tuples in format of [(cnfstring, value, condition), ...]
+        # Condition will be 0 if there are no conditions
