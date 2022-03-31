@@ -188,6 +188,41 @@ class Logic:
 
         return [optimal[0][rand1], optimal[1][rand2]]
 
+    def determineQualitativeSD(self, object, rule):
+        """
+        Determines whether or not an object satisfies a rule, and returns the satisfaction degree of that rule.
+        :param object: the object to test against the rule
+        :param rule: the rule to test, in the form (condition, (rule1, rule2, ...). All inputs should be formatted as strings.
+        :return: If object conforms to rule, satisfaction degree, else sys.maxsize (infinity)
+        """
+
+        inf = sys.maxsize
+        # Check condition first, if it exists
+        if rule[0] != "0":
+            enumAttr = object.split()
+            numAttr = len(enumAttr)
+            condFile = open("condition.cnf", "w")
+            condFile.write("p cnf " + str(numAttr) + " 1\n")
+            condFile.write(str(rule[0]) + " 0\n")
+            for i in enumAttr:
+                condFile.write(i + " 0\n")
+            condFile.close()
+            condOut = sp.run('clingo --mode=clasp condition.cnf --verbose=1', shell=True, capture_output=True)
+            condString = str(condOut.stdout)
+            os.remove('condition.cnf')
+            if "UNSATISFIABLE" in condString:
+                return inf
+
+        # Check the object against every rule and return their satisfaction degree
+        sd = 1
+        for i in rule[1]:
+            if self.checkRule(object, i) == 1:
+                return sd
+            sd += 1
+
+        # If the code reaches this point, all rules have failed.
+        return inf
+
     def createFeasibleObjects(self, constraints: str) -> list[str]:
         """Returns a list of all feasible objects. If no feasible objects are possible, return []\n
         constraints : cnf file, formatted as a string, containing the constraints to use\n
