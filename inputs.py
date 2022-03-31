@@ -76,9 +76,9 @@ class Inputs:
     def cnfQualitative(self, qualLines: list, cnfDict: dict):
         numattr = int(len(cnfDict) / 2)
         numclauses = 1
-        qualnum = 1
         textformat = ""
         qualtuples = []
+        rule = []
         lastnot = False
         for lines in qualLines:
             if lines.endswith("IF"):
@@ -103,18 +103,19 @@ class Inputs:
                     textformat += " "
                 elif term == "BT":
                     cnfQual = "p cnf " + str(numattr) + " " + str(numclauses) + "\n" + textformat + " 0"
-                    t = cnfQual, str(qualnum), condition
-                    qualtuples.append(t)
+                    rule.append(cnfQual)
                     textformat = ""
                     qualnum += 1
                     numclauses = 1
                 else:
                     textformat += str(cnfDict[term])
             cnfQual = "p cnf " + str(numattr) + " " + str(numclauses) + "\n" + textformat + " 0"
-            t = cnfQual, str(qualnum), condition
+            rule.append(cnfQual)
+            t = condition, tuple(rule)
             qualtuples.append(t)
+            rule[:] = []
             textformat = ""
             qualnum = 1
             numclauses = 1
-        return qualtuples  # Returns list of tuples in format of [(cnfstring, value, condition), ...]
-        # Condition will be 0 if there are no conditions
+        return qualtuples  # Returns list of tuples in format of [(condition, (cnf, ...)), ...]
+        # Condition will be 0 if there are no conditions.
