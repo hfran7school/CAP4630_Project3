@@ -2,7 +2,7 @@
 Authors: Hailey Francis, Jacob McGee, Edward Hage
 
 # Relevant Information
-- On startup, the files "attributes.txt", "constraints.txt", "penalty.txt", "possible.txt" and "qualitative.txt" will be written on startup. If they already exist in the current directory, they will be overwritten.
+- On startup, the files "attributes.txt", "constraints.txt", "penalty.txt", "possible.txt" and "qualitative.txt" will be created. If they already exist in the current directory, they will be overwritten.
 - (Have not decided if the files will be cleared or deleted on program close)
 
 # Instructions
