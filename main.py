@@ -99,19 +99,23 @@ def check_valid(test, qual):
                 elif need_comparison:
                     error_checking(2)
                     return 1
-                else: # success
+                else:  # success
                     not_item = True
             elif item == "AND" or item == "OR":
                 if need_item:
                     error_checking(3)
                     return 1
-                else: # success
+                else:  # success
                     need_item = True
                     need_comparison = False
             elif item in BA_Options:
                 if need_comparison:
                     error_checking(4)
                     return 1
+                elif not_item:
+                    not_item = False
+                need_item = False
+                need_comparison = True
             else:
                 error_checking(5)
                 return 1
