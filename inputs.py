@@ -15,6 +15,8 @@ def cnfConstraints(constraints: list, cnfDict: dict):
     numclauses = 0
     textformat = ""
     for constr in constraints:
+        if textformat != "":
+            textformat += "\n"
         parseconstr = constr.split()
         for term in parseconstr:
             if term == "NOT":
@@ -31,7 +33,7 @@ def cnfConstraints(constraints: list, cnfDict: dict):
             else:
                 textformat += str(attr[term])
         numclauses += 1
-        textformat += " 0\n"
+        textformat += " 0"
     cnfString = "p cnf " + str(numattributes) + " " + str(numclauses) + "\n" + textformat
     return cnfString
 
