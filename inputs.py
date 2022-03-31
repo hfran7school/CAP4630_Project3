@@ -10,7 +10,7 @@ def updateDictionary(attributes: list):
 
 
 def cnfConstraints(constraints: list, cnfDict: dict):
-    attr = cnfDictionary
+    attr = cnfDict
     numattributes = len(attr)
     numclauses = 1
     textformat = ""
@@ -29,7 +29,7 @@ def cnfConstraints(constraints: list, cnfDict: dict):
             elif term == "OR":
                 textformat += " "
             else:
-                textformat += attr[term]
+                textformat += str(attr[term])
     cnfString = "p cnf " + str(numattributes) + " " + str(numclauses) + "\n" + textformat + " 0"
     return cnfString
 
