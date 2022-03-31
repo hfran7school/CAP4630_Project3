@@ -1,71 +1,74 @@
-def updateDictionary(attributes: list):
-    count = 1
-    dictionary = {}
-    for item in attributes:
-        readattr = item.split(',')
-        dictionary[readattr[0]] = count
-        dictionary[readattr[1]] = -count
-        count += 1
-    return dictionary
+class Inputs:
+    def updateDictionary(self, attributes: list):
+        count = 1
+        dictionary = {}
+        for item in attributes:
+            readattr = item.split(',')
+            dictionary[readattr[0]] = count
+            dictionary[readattr[1]] = -count
+            count += 1
+        return dictionary
 
 
-def cnfConstraints(constraints: list, cnfDict: dict):
-    attr = cnfDict
-    numattributes = len(attr)
-    numclauses = 0
-    textformat = ""
-    for constr in constraints:
-        if textformat != "":
-            textformat += "\n"
-        parseconstr = constr.split()
-        for term in parseconstr:
-            if term == "NOT":
-                lastnot = True
-            elif lastnot:
-                item = int(attr[term]) * -1
-                textformat += str(item)
-                lastnot = False
-            elif term == "AND":  # The AND is implicit in hard constraints -- keeping regardless
-                textformat += " 0\n"
-                numclauses += 1
-            elif term == "OR":
-                textformat += " "
-            else:
-                textformat += str(attr[term])
-        numclauses += 1
-        textformat += " 0"
-    cnfString = "p cnf " + str(numattributes) + " " + str(numclauses) + "\n" + textformat
-    return cnfString
+    def cnfConstraints(self, constraints: list, cnfDict: dict):
+        attr = cnfDict
+        numattributes = int(len(attr) / 2)
+        numclauses = 0
+        textformat = ""
+        for constr in constraints:
+            if textformat != "":
+                textformat += "\n"
+            parseconstr = constr.split()
+            for term in parseconstr:
+                if term == "NOT":
+                    lastnot = True
+                elif lastnot:
+                    item = int(attr[term]) * -1
+                    textformat += str(item)
+                    lastnot = False
+                elif term == "AND":  # The AND is implicit in hard constraints -- keeping regardless
+                    textformat += " 0\n"
+                    numclauses += 1
+                elif term == "OR":
+                    textformat += " "
+                else:
+                    textformat += str(attr[term])
+            numclauses += 1
+            textformat += " 0"
+        cnfString = "p cnf " + str(numattributes) + " " + str(numclauses) + "\n" + textformat
+        return cnfString
 
-# def cnfLogic(logic):
-#     logic = cnfDictionary
-#     numattr = len(pen)
-#     numclauses = 1
-#     readlogic = logic.split('\n')
-#     textformat = ""
-#     logictuples = []
-#     for lines in readlogic:
-#         parselogic = lines.split(',')
-#         numsave = parselogic[1]
-#         parselogic = parselogic[0].split()
-#         for term in parselogic:
-#             if term == "NOT":
-#                 lastnot = True
-#             elif lastnot:
-#                 item = int(logic[term]) * -1
-#                 textformat += str(item)
-#                 lastnot = False
-#             elif term == "AND":
-#                 textformat += " 0\n"
-#                 numclauses += 1
-#             elif term == "OR":
-#                 textformat += " "
-#             else:
-#                 textformat += logic[term]
-#         cnfLogic = "p cnf " + str(numattr) + " " + str(numclauses) + "\n" + textformat + " 0"
-#         t = cnfLogic, numsave
-#         logictuples.append(t)
-#         textformat = ""
+# Used for both PENALTY and POSSIBILISTIC logics
+    def cnfLogic(self, logicLines: list, cnfDict: dict):
+        logic = cnfDict
+        numattr = int(len(logic) / 2)
+        numclauses = 1
+        textformat = ""
+        logictuples = []
+        for lines in logicLines:
+            parselogic = lines.split(',')
+            numsave = str(parselogic[1])
+            parselogic = parselogic[0].split()
+            for term in parselogic:
+                if term == "NOT":
+                    lastnot = True
+                elif lastnot:
+                    item = int(logic[term]) * -1
+                    textformat += str(item)
+                    lastnot = False
+                elif term == "AND":
+                    textformat += " 0\n"
+                    numclauses += 1
+                elif term == "OR":
+                    textformat += " "
+                else:
+                    textformat += logic[term]
+            cnfLogic = "p cnf " + str(numattr) + " " + str(numclauses) + "\n" + textformat + " 0"
+            t = cnfLogic, numsave
+            logictuples.append(t)
+            textformat = ""
+            numclauses = 1
+        return logictuples  # Returns list of tuples in format of [(cnfstring, value), ...]
 
 
 # # All of below will receive the cnf dictionary and string representing the contents of the file
