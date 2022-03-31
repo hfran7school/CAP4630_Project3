@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
+import inputs
 from preferenceLogic import Logic as brain
 
 #TODO:
@@ -304,8 +305,10 @@ def updateQuality():
             readQual = qualFile.readline()
     #print(pref_qualitative)
 
-#def updateFeasObj():
-
+def updateFeasObj():
+    cnfDictionary = inputs.updateDictionary(attrOptions)
+    cnfConstraints = inputs.cnfConstraints(hardConstraints, cnfDictionary)
+    print(cnfConstraints)
 """END UPDATE WITH FILE INFO"""
 
 """RESET METHOD"""
