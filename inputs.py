@@ -12,7 +12,7 @@ def updateDictionary(attributes: list):
 def cnfConstraints(constraints: list, cnfDict: dict):
     attr = cnfDict
     numattributes = len(attr)
-    numclauses = 1
+    numclauses = 0
     textformat = ""
     for constr in constraints:
         parseconstr = constr.split()
@@ -32,7 +32,7 @@ def cnfConstraints(constraints: list, cnfDict: dict):
                 textformat += str(attr[term])
         numclauses += 1
         textformat += " 0\n"
-    cnfString = "p cnf " + str(numattributes) + " " + str(numclauses) + "\n" + textformat + " 0"
+    cnfString = "p cnf " + str(numattributes) + " " + str(numclauses) + "\n" + textformat
     return cnfString
 
 # def cnfLogic(logic):
