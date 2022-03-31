@@ -99,13 +99,13 @@ def check_valid(test, qual):
                 elif need_comparison:
                     error_checking(2)
                     return 1
-                else:  # success
+                else: # success
                     not_item = True
             elif item == "AND" or item == "OR":
                 if need_item:
                     error_checking(3)
                     return 1
-                else:  # success
+                else: # success
                     need_item = True
                     need_comparison = False
             elif item in BA_Options:
@@ -283,8 +283,21 @@ def updatePenalty():
             print(readPen)
             pref_penalty.append(readPen)
             readPen = penFile.readline()
-    print(pref_penalty)
+    #print(pref_penalty)
 
+def updatePossible():
+    with open("possible.txt") as possFile:
+        readPoss = possFile.readline()
+        while readPoss != '':
+            readPoss = readPoss.replace("\n","")
+            poss_lbox.insert(END, readPoss)
+            possParse = readPoss.split(",")
+            possParse[1] = possParse[1].replace(" ","")
+            readPoss = possParse[0] + "," + possParse[1]
+            print(readPoss)
+            pref_possible.append(readPoss)
+            readPoss = possFile.readline()
+    print(pref_possible)
 """END UPDATE WITH FILE INFO"""
 
 """RESET METHOD"""
@@ -443,7 +456,7 @@ poss_lb_val = Label(poss_frame2, text="Value")
 poss_entr_pref = Entry(poss_frame2)
 poss_entr_val = Entry(poss_frame2)
 poss_addButton = Button(poss_frame2, text="Add Preference", command=poss_add)
-poss_file = Button(poss_frame2, text="Open File")
+poss_fileButton = Button(poss_frame2, text="Update with File Info", command=updatePossible)
 
 #possibilistic placements
 poss_lb_pref.grid(row=0, column=0)
@@ -451,7 +464,7 @@ poss_entr_pref.grid(row=1, column=0)
 poss_lb_val.grid(row=0, column=1)
 poss_entr_val.grid(row=1, column=1)
 poss_addButton.grid(row=2, column=0)
-poss_file.grid(row=3, column=0)
+poss_fileButton.grid(row=3, column=0)
 """END POSSIBILISTIC (PREFERENCE 2)"""
 
 """QUALITATIVE (PREFERENCE 3)"""
