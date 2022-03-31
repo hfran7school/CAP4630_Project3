@@ -64,7 +64,7 @@ class Inputs:
                 elif term == "OR":
                     textformat += " "
                 else:
-                    textformat += logic[term]
+                    textformat += str(logic[term])
             cnfLogic = "p cnf " + str(numattr) + " " + str(numclauses) + "\n" + textformat + " 0"
             t = cnfLogic, numsave
             logictuples.append(t)
