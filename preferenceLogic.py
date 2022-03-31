@@ -120,7 +120,7 @@ class Logic:
 
     def exemplify(self, feasibleObjects: list, rules: tuple) -> list:
         """
-        Generates all feasible objects, picks two at random, and compares them according to the different logics.
+        Picks two feasible objects at random, and compares them according to the different logics.
         :param feasibleObjects: the list of feasible objects
         :param rules: the preference rules to use. Must be a 3-tuple, with the elements being the rules for penalty, possibilistic, and qualitative logics, respectfully
         :return: a list containing a 2-tuple with the objects used, and the number of the object (1 or 2) that is preferred for each of the logics, in the above order, with 0 being congruency (and -1 for incompatibility for qualitative)
@@ -177,7 +177,7 @@ class Logic:
 
     def optimize(self, feasibleObjects: list, rules: tuple):
         """
-        Runs omniOptimize, selects one random element from each list, and returns each.
+        Runs omniOptimize, selects one random element from each tuple, and returns each.
         :param feasibleObjects: all feasible objects
         :param rules: the preference rules to use. Must be a 3-tuple, with the elements being the rules for penalty, possibilistic, and qualitative logics, respectfully
         :return: a list containing one optimal object for each of the logics
