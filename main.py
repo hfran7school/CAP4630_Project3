@@ -1,12 +1,10 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-#import inputs
 from preferenceLogic import Logic as brain
 
 #TODO:
 # - fix feasible objects update button
-# - write to qualitative objects file from user input
 # - ALL OF exemplify
 # - ALL OF optimize
 # - ALL OF omni
@@ -226,7 +224,6 @@ def qual_add():
         qual_lbox.insert(END, userQual)
         qual_entr_pref.delete(0,END)
 
-#TODO: add qual
 """END ADD BUTTON DEFINITIONS"""
 
 """UPDATE WITH FILE INFO"""
@@ -306,6 +303,8 @@ def updateQuality():
             pref_qualitative.append(readQual)
             readQual = qualFile.readline()
     #print(pref_qualitative)
+
+#def updateFeasObj():
 
 """END UPDATE WITH FILE INFO"""
 
@@ -406,7 +405,7 @@ feasObj_scroll = Scrollbar(feasObj_frame, orient='vertical', command=feasObj_lbo
 feasObj_scroll.grid(row=0, column=1, sticky='ns')
 feasObj_lbox['yscrollcommand'] = feasObj_scroll.set
 
-feasObj_updateButton = Button(feasObj_frame, text="Update")#,command=updateFeasObj)
+feasObj_updateButton = Button(feasObj_frame, text="Update", command=updateFeasObj)
 feasObj_updateButton.grid(row=0,column=2)
 """END FEASIBLE OBJECTS"""
 
