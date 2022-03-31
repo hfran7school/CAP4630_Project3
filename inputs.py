@@ -23,13 +23,15 @@ def cnfConstraints(constraints: list, cnfDict: dict):
                 item = int(attr[term]) * -1
                 textformat += str(item)
                 lastnot = False
-            elif term == "AND":
+            elif term == "AND":  # The AND is implicit in hard constraints -- keeping regardless
                 textformat += " 0\n"
                 numclauses += 1
             elif term == "OR":
                 textformat += " "
             else:
                 textformat += str(attr[term])
+        numclauses += 1
+        textformat += " 0\n"
     cnfString = "p cnf " + str(numattributes) + " " + str(numclauses) + "\n" + textformat + " 0"
     return cnfString
 
