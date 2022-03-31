@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-import inputs
+from inputs import Inputs as middleMan
 from preferenceLogic import Logic as brain
 
 #TODO:
@@ -306,19 +306,25 @@ def updateQuality():
     #print(pref_qualitative)
 
 def updateFeasObj():
-    cnfDictionary = inputs.updateDictionary(attrOptions)
-    cnfConstraints = inputs.cnfConstraints(hardConstraints, cnfDictionary)
-    print(cnfConstraints)
+    cnf = middleMan()
+    cnfDictionary = cnf.updateDictionary(attrOptions)
+    cnfConstraints = cnf.cnfConstraints(hardConstraints, cnfDictionary)
+    logic = brain()
+    feasObj = logic.createFeasibleObjects(cnfConstraints)
+    print(feasObj)
+    # print(cnfDictionary)
+    # print(cnfConstraints)
+    
 """END UPDATE WITH FILE INFO"""
 
 """RESET METHOD"""
 def reset():
-    BA_Options = [] #for error checking if the option name already exists
-    attrOptions = [] #list of options for each attribute seperated by a comma
-    hardConstraints = [] #list of hard constraints (string)
-    pref_penalty = [] #list of penalty logic
-    pref_possible = [] #list of possiblistic logic
-    pref_qual = [] #list of qualitative logic
+    BA_Options.clear() #for error checking if the option name already exists
+    attrOptions.clear() #list of options for each attribute seperated by a comma
+    hardConstraints.clear() #list of hard constraints (string)
+    pref_penalty.clear() #list of penalty logic
+    pref_possible.clear() #list of possiblistic logic
+    pref_qualitative.clear() #list of qualitative logic
     binAtr_lbox.delete(0,END)
     hardConstr_lbox.delete(0,END)
     pen_lbox.delete(0,END)
