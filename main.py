@@ -51,60 +51,76 @@ def omni():
 
 """ERROR CHECKING"""
 def check_valid(test, qual):
-    comparison_next = False
-    item_next = True
     not_item = False
-    if_item = False
-    for item in test.split():
-        if item == "NOT":
-            if not_item:
-                error_checking(1)
+    need_item = True
+    need_comparison = False
+    if qual:
+        if_comparison = False
+        for item in test.split():
+            if item == "AND" or item == "BT":
+                if need_item or not need_comparison:
+                    error_checking(3)
+                    return 1
+                else:
+                    need_item = True
+                    need_comparison = False
+            elif item == "IF":
+                if if_comparison or need_item or not need_comparison:
+                    error_checking(3)
+                    return 1
+                else:
+                    if_comparison = True
+                    need_comparison = False
+                    need_item = True
+            elif item in BA_Options:
+                if need_comparison or not need_item:
+                    error_checking(4)
+                    return 1
+                elif if_comparison:
+                    need_comparison = False
+                    need_item = False
+                else:
+                    need_comparison = True
+                    need_item = False
+            else:
+                error_checking(6)
                 return 1
-            elif comparison_next:
-                error_checking(2)
-                return 1
-            not_item = True
-        elif item == "AND" or item == "OR":
-            if item_next:
-                error_checking(3)
-                return 1
-            elif if_item:
-                error_checking(8)
-                return 1
-            comparison_next = False
-            item_next = True
-        elif (item == "BT" or item == "IF") and not qual:
-            error_checking(7)
+        if not if_comparison:
+            error_checking(9)
             return 1
-        elif item == "BT":
-            if item_next:
-                error_checking(3)
-                return 1
-            comparison_next = False
-            item_next = True
-            if_item = False
-        elif item == "IF":
-            if item_next:
-                error_checking(3)
-                return 1
-            comparison_next = False
-            item_next = True
-            if_item = True
-        elif item in BA_Options:
-            if comparison_next:
-                error_checking(4)
-                return 1
-            comparison_next = True
-            item_next = False
-            not_item = False
         else:
-            error_checking(5)
-            return 1
-    if item_next:
-        error_checking(6)
-        return 1
+            return 0
     else:
-        return 0
+        for item in test.split():
+            if item == "NOT":
+                if not_item:
+                    error_checking(1)
+                    return 1
+                elif need_comparison:
+                    error_checking(2)
+                    return 1
+                else: # success
+                    not_item = True
+            elif item == "AND" or item == "OR":
+                if need_item:
+                    error_checking(3)
+                    return 1
+                else: # success
+                    need_item = True
+                    need_comparison = False
+            elif item in BA_Options:
+                if need_comparison:
+                    error_checking(4)
+                    return 1
+            else:
+                error_checking(5)
+                return 1
+        if need_item:
+            error_checking(6)
+            return 1
+        else:
+            return 0
+
 
 def error_checking(num):
     if num == 1:
@@ -131,6 +147,8 @@ def error_checking(num):
     elif num == 8:
         messagebox.showinfo("ERROR: Syntax", "Comparisons cannot be made for conditions.")
         return
+    elif num == 9:
+        messagebox.showinfo("ERROR: Syntax", "Qualitative logic needs an IF statement -- even if there's no condition")
 
 """ADD BUTTON DEFINITIONS"""
 def binAtr_add():
