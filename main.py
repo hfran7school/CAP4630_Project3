@@ -44,10 +44,6 @@ def omni():
     # TODO: create layout for omni-optimize
 
 """END TASK METHOD DEFINITIONS"""
-# def updateFeasObj():
-#      claspObj = inputs.getFeasObjClasp(attrOptions) #return a string for clasp using the using a list in the "option1,option2" format
-#      feasibleObjects = brain.createFeasibleObjects(claspObj)
-#      # would place feasible objects into a list of objects as well as the GUI
 
 """ERROR CHECKING"""
 def check_valid(test, qual):
@@ -252,6 +248,8 @@ def updateAttr():
             parseattr[1]=parseattr[1].replace(" ","")
             parseattr[0]=parseattr[0].replace("\n","")
             parseattr[1]=parseattr[1].replace("\n","")
+            BA_Options.append(parseattr[0])
+            BA_Options.append(parseattr[1])
             options = parseattr[0] + "," + parseattr[1]
             statement = head + ": " + parseattr[0] + ", " + parseattr[1]
             binAtr_lbox.insert(END, statement)
@@ -297,7 +295,18 @@ def updatePossible():
             print(readPoss)
             pref_possible.append(readPoss)
             readPoss = possFile.readline()
-    print(pref_possible)
+    #print(pref_possible)
+
+def updateQuality():
+    with open("qualitative.txt") as qualFile:
+        readQual = qualFile.readline()
+        while readQual != '':
+            readQual = readQual.replace("\n","")
+            qual_lbox.insert(END, readQual)
+            pref_qualitative.append(readQual)
+            readQual = qualFile.readline()
+    #print(pref_qualitative)
+
 """END UPDATE WITH FILE INFO"""
 
 """RESET METHOD"""
@@ -485,13 +494,13 @@ qual_lbox['yscrollcommand'] = qual_scroll.set
 qual_lb_pref = Label(qual_frame2, text="Preference")
 qual_entr_pref = Entry(qual_frame2)
 qual_addButton = Button(qual_frame2, text="Add Preference", command=qual_add)
-qual_file = Button(qual_frame2, text="Open File")
+qual_fileButton = Button(qual_frame2, text="Update with File Info", command=updateQuality)
 
 #qualitative frame2 placements
 qual_lb_pref.grid(row=0, column=0)
 qual_entr_pref.grid(row=1, column=0)
 qual_addButton.grid(row=2, column=0)
-qual_file.grid(row=3, column=0)
+qual_fileButton.grid(row=3, column=0)
 """END QUALITATIVE (PREFERENCE 3)"""
 
 """END PREFERENCE"""
