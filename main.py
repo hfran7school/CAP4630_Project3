@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
-import inputs
+#import inputs
 from preferenceLogic import Logic as brain
 
 #TODO:
@@ -12,14 +12,11 @@ from preferenceLogic import Logic as brain
 # - ALL OF omni
 # - add X-axis scrollbars to all listboxes
 
-attrFile = open("attributes.txt", "w")
-attrFile.close()
-hardConstrFile = open("constraints.txt","w")
-hardConstrFile.close()
-penaltyFile = open("penalty.txt", "w")
-penaltyFile.close()
-
-BA_Options = [] #binaryAttributes
+BA_Options = [] #for error checking if the option name already exists
+attrOptions = [] #list of options for each attribute seperated by a comma
+hardConstraints = [] #list of hard constraints (string)
+pref_penalty = [] #list of penalty logic
+pref_possible = [] #list of possiblistic logic
 
 root = tk.Tk()
 root.title("CAP4630 Project 3")
@@ -46,12 +43,10 @@ def omni():
     # TODO: create layout for omni-optimize
 
 """END TASK METHOD DEFINITIONS"""
-def updateFeasObj():
-    claspObj = inputs.claspFeasObj()
+#def updateFeasObj():
+    #claspObj = inputs.claspFeasObj()
     #result = preferenceLogic.Logic.createFeasibleObjects(claspObj)
     #print(result)
-
-
 
 """ERROR CHECKING"""
 def check_valid(test, qual):
@@ -145,19 +140,15 @@ def binAtr_add():
     userOp2 = binAtr_entr_op2.get()
     userOp2 = userOp2.replace(" ","-")
     if userAtr != "" and userOp1 != "" and userOp2 != "":
-        try:
-            statement = userAtr + ": " + userOp1 + ", " + userOp2 + "\n"
-            with open("attributes.txt", "a") as attrFile:
-                attrFile.write(statement)
-                attrFile.close()
-                binAtr_lbox.insert(END, statement)
-                BA_Options.append(userOp1)
-                BA_Options.append(userOp2)
-                binAtr_entr_attr.delete(0, END)
-                binAtr_entr_op1.delete(0,END)
-                binAtr_entr_op2.delete(0,END)
-        except FileNotFoundError:
-            print("The attributes.txt does not exist")
+        statement = userAtr + ": " + userOp1 + ", " + userOp2
+        binAtr_lbox.insert(END, statement)
+        attrOptions.append(str(userOp1 + "," + userOp2))
+        BA_Options.append(userOp1)
+        BA_Options.append(userOp2)
+        binAtr_entr_attr.delete(0, END)
+        binAtr_entr_op1.delete(0,END)
+        binAtr_entr_op2.delete(0,END)
+        #print(attrOptions)
     else:
         messagebox.showinfo("ERROR: Binary Attributes","Please fill in all entries before entering a binary attribute.")
     
@@ -165,14 +156,10 @@ def hardConstr_add():
     userHardConstr = hardConstr_entr_constr.get()
     result = check_valid(userHardConstr, False)
     if result == 0:
-        try:
-            hardConstrFile = open("constraints.txt", "a")
-            hardConstrFile.write(userHardConstr)
-            hardConstrFile.write("\n")
-            hardConstr_lbox.insert(END, userHardConstr)
-            hardConstr_entr_constr.delete(0,END)
-        except FileNotFoundError:
-            print("constraints.txt does not exist.")
+        hardConstr_lbox.insert(END, userHardConstr)
+        hardConstr_entr_constr.delete(0,END)
+        hardConstraints.append(userHardConstr)
+        print(hardConstraints)
 
 def pen_add():
     userPenalty = pen_entr_pref.get()
@@ -182,17 +169,11 @@ def pen_add():
     else:
         result = check_valid(userPenalty, False)
         if result == 0:
-            try:
-                statement = userPenalty + ", " + str(userValue)
-                PenaltyFile = open("penalty.txt", "a")
-                PenaltyFile.write(statement)
-                PenaltyFile.write("\n")
-                PenaltyFile.close()
-                pen_lbox.insert(END, statement)
-                pen_entr_pref.delete(0, END)
-                pen_entr_val.delete(0, END)
-            except FileNotFoundError:
-                print("constraints.txt does not exist.")
+            statement = userPenalty + "," + str(userValue)
+            pen_lbox.insert(END, statement)
+            pref_penalty.append(statement)
+            pen_entr_pref.delete(0, END)
+            pen_entr_val.delete(0, END)
 
 def poss_add():
     userPoss = poss_entr_pref.get()
@@ -212,18 +193,44 @@ def poss_add():
     if val == True:
         result = check_valid(userPoss, False)
         if result == 0:
-            try:
-                statement = userPoss + ", " + str(userValue)
-                PossibleFile = open("possible.txt", "a")
-                PossibleFile.write(statement)
-                PossibleFile.write("\n")
-                PossibleFile.close()
-                poss_lbox.insert(END, statement)
-                poss_entr_pref.delete(0, END)
-                poss_entr_val.delete(0, END)
-            except FileNotFoundError:
-                print("constraints.txt does not exist.")
+            statement = userPoss + "," + str(userValue)
+            poss_lbox.insert(END, statement)
+            pref_possible.append(statement)
+            poss_entr_pref.delete(0, END)
+            poss_entr_val.delete(0, END)
+
 #TODO: add qual
+
+#update File
+def updateAttr():
+    with open ('attributes.txt') as attrfile:
+        count = 1
+        readattr = attrfile.readline()
+        attrnames = []
+
+        while readattr != '':
+            parseattr = readattr.split(':')
+            head = parseattr[0]
+            if head in attrnames:
+                readattr = attrfile.readline()
+                parseattr[:] = []
+                continue
+            attrnames.append(head)
+            parseattr = parseattr[1].split(',')
+            parseattr[0]=parseattr[0].replace(" ","")
+            parseattr[1]=parseattr[1].replace(" ","")
+            parseattr[0]=parseattr[0].replace("\n","")
+            parseattr[1]=parseattr[1].replace("\n","")
+            options = parseattr[0] + "," + parseattr[1]
+            statement = head + ": " + parseattr[0] + ", " + parseattr[1]
+            binAtr_lbox.insert(END, statement)
+            attrOptions.append(options)
+            " incrementing & reseting "
+            count += 1
+            readattr = attrfile.readline()
+            parseattr[:] = []
+    #print(attrOptions)
+        
 
 """END ADD BUTTON DEFINITIONS"""
 
@@ -253,7 +260,7 @@ def reset():
 top = Frame(root)
 top.grid(row=0, column=0) #top frame to help align with preferences row
 
-"""START BINARY CONSTRAITS"""
+"""START BINARY ATTRIBUTES"""
 #binary attribute frames
 binAtr_frame = tk.LabelFrame(top, text="Binary Attributes", padx=10, pady=10)
 binAtr_frame2 = tk.Frame(binAtr_frame)
@@ -276,7 +283,7 @@ binAtr_entr_op1 = tk.Entry(binAtr_frame2)
 binAtr_entr_op2 = tk.Entry(binAtr_frame2)
 
 binAtr_addButton = tk.Button(binAtr_frame2, text="Add Attribute", command=binAtr_add)
-binAtr_openFileButton = tk.Button(binAtr_frame2, text="Open File")
+binAtr_updateFileButton = tk.Button(binAtr_frame2, text="Update with File Info", command=updateAttr)
 
 #binary attribute frame 2 (placements)
 binAtr_lb_attr.grid(row=0,column=0)
@@ -286,7 +293,7 @@ binAtr_entr_op1.grid(row=3,column=0)
 binAtr_lb_op2.grid(row=2, column=2)
 binAtr_entr_op2.grid(row=3,column=2)
 binAtr_addButton.grid(row=4, column=0)
-binAtr_openFileButton.grid(row=5, column=0)
+binAtr_updateFileButton.grid(row=5, column=0)
 """END binary Attributes"""
 
 """HARD CONSTRAITS"""
@@ -328,7 +335,7 @@ feasObj_scroll = Scrollbar(feasObj_frame, orient='vertical', command=feasObj_lbo
 feasObj_scroll.grid(row=0, column=1, sticky='ns')
 feasObj_lbox['yscrollcommand'] = feasObj_scroll.set
 
-feasObj_updateButton = Button(feasObj_frame, text="Update",command=updateFeasObj)
+feasObj_updateButton = Button(feasObj_frame, text="Update")#,command=updateFeasObj)
 feasObj_updateButton.grid(row=0,column=2)
 """END FEASIBLE OBJECTS"""
 
