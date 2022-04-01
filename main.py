@@ -50,19 +50,21 @@ def exemplify():
         elif int(output[1]) == 2:
             obPen.set("Object 2")
         else:
-            obPen.set("Neither")
+            obPen.set("Congruent")
         if int(output[2]) == 1:
             obPoss.set("Object 1")
         elif int(output[2]) == 2:
             obPoss.set("Object 2")
         else:
-            obPoss.set("Neither")
+            obPoss.set("Congruent")
         if int(output[3]) == 1:
             obQual.set("Object 1")
         elif int(output[3]) == 2:
             obQual.set("Object 2")
+        elif int(output[3] == -1):
+            obQual.set("Incomparable")
         else:
-            obQual.set("Neither")
+            obQual.set("Congruent")
         
 
         ob1Label = Label(exemp_win, text="Object 1")
@@ -74,6 +76,12 @@ def exemplify():
 
         ob1Entry = Entry(exemp_win, textvariable=ob1, state=DISABLED, width=50)
         ob2Entry = Entry(exemp_win, textvariable=ob2, state=DISABLED, width=50)
+        ob1_scrollH = Scrollbar(exemp_win, orient='horizontal', command=ob1Entry.xview)
+        ob1_scrollH.grid(row=2, column=0, sticky='ew')
+        ob1Entry['xscrollcommand'] = ob1_scrollH.set
+        ob2_scrollH = Scrollbar(exemp_win, orient='horizontal', command=ob2Entry.xview)
+        ob2_scrollH.grid(row=2, column=1, sticky='ew')
+        ob2Entry['xscrollcommand'] = ob2_scrollH.set
 
         penEntry = Entry(prefLabelFrame, textvariable=obPen, state=DISABLED)
         possEntry = Entry(prefLabelFrame, textvariable=obPoss, state=DISABLED)
@@ -84,7 +92,7 @@ def exemplify():
         ob1Entry.grid(row=1,column=0)
         ob2Entry.grid(row=1,column=1)
 
-        prefLabelFrame.grid(row=2)
+        prefLabelFrame.grid(row=3)
         penLabel.grid(row=0,column=0)
         possLabel.grid(row=1,column=0)
         qualLabel.grid(row=2,column=0)
