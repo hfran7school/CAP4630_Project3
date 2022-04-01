@@ -7,7 +7,9 @@ class Inputs:
             dictionary[readattr[0]] = count
             dictionary[readattr[1]] = -count
             count += 1
-        return dictionary
+        revDictionary = {v: k for k, v in dictionary.items()}
+        twoDictionaries = [dictionary, revDictionary]
+        return twoDictionaries  # Returns a list with first value being the cnfDictionary and the second value being the inverse
 
 
     def cnfConstraints(self, constraints: list, cnfDict: dict):
