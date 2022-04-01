@@ -48,7 +48,10 @@ class Inputs:
                     item = int(attr[term]) * -1
                     textformat += str(item)
                     lastnot = False
-                elif term == "OR" or term == "AND":
+                elif term == "AND":
+                    numclauses += 1
+                    textformat += " 0\n"
+                elif term == "OR":
                     textformat += " "
                 else:
                     textformat += str(attr[term])
