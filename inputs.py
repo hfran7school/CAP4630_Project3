@@ -87,6 +87,7 @@ class Inputs:
                 quallist = qualitems[0].split()
             else:
                 qualitems = lines.split("IF")
+                qualitems[1] = qualitems[1].replace(" ", "")
                 condition = str(cnfDict[qualitems[1]])
                 quallist = qualitems[0].split()
             for term in quallist:
