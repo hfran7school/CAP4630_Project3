@@ -84,7 +84,7 @@ class Inputs:
             if lines.endswith("IF"):
                 condition = "0"
                 qualitems = lines.split("IF")
-                quallist = qualitems.split()
+                quallist = qualitems[0].split()
             else:
                 qualitems = lines.split("IF")
                 condition = str(cnfDict[qualitems[1]])
