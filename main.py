@@ -570,9 +570,13 @@ feasObj_frame.grid(row=0, column=3)
 
 feasObj_lbox = Listbox(feasObj_frame, width=40)
 feasObj_lbox.grid(row=0, column=0)
-feasObj_scroll = Scrollbar(feasObj_frame, orient='vertical', command=feasObj_lbox.yview)
-feasObj_scroll.grid(row=0, column=1, sticky='ns')
-feasObj_lbox['yscrollcommand'] = feasObj_scroll.set
+feasObj_scrollV = Scrollbar(feasObj_frame, orient='vertical', command=feasObj_lbox.yview)
+feasObj_scrollV.grid(row=0, column=1, sticky='ns')
+feasObj_lbox['yscrollcommand'] = feasObj_scrollV.set
+feasObj_scrollH = Scrollbar(feasObj_frame, orient='horizontal', command=feasObj_lbox.xview)
+feasObj_scrollH.grid(row=1, column=0, sticky='ew')
+feasObj_lbox['xscrollcommand'] = feasObj_scrollH.set
+
 
 feasObj_updateButton = Button(feasObj_frame, text="Update", command=updateFeasObj)
 feasObj_updateButton.grid(row=0,column=2)
