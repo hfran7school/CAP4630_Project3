@@ -5,7 +5,6 @@ from inputs import Inputs as middleMan
 from preferenceLogic import Logic as brain
 
 #TODO:
-# - fix feasible objects update button
 # - ALL OF exemplify
 # - ALL OF optimize
 # - ALL OF omni
@@ -17,6 +16,7 @@ hardConstraints = [] #list of hard constraints (string)
 pref_penalty = [] #list of penalty logic
 pref_possible = [] #list of possiblistic logic
 pref_qualitative = [] #list of qualitative logic
+feasibleObjects = [] #feasible objects (clasp)
 
 root = tk.Tk()
 root.title("CAP4630 Project 3")
@@ -26,9 +26,76 @@ root.title("CAP4630 Project 3")
 """TASK METHOD DEFINITIONS"""
 #pop up window for exemplify
 def exemplify():
-    exemp_win = Toplevel(taskFrame)
-    exemp_win.title("Exemplify")
-    # TODO: create layout for exemplify
+    if len(feasibleObjects) != 0:
+        exemp_win = Toplevel(taskFrame)
+        exemp_win.title("Exemplify")
+
+        cnf = middleMan()
+        cnfDictionaries = cnf.updateDictionary(attrOptions)
+        cnfPen = cnf.cnfLogic(pref_penalty, cnfDictionaries[0])
+        cnfPoss = cnf.cnfLogic(pref_possible, cnfDictionaries[0])
+        cnfQual = cnf.cnfQualitative(pref_qualitative, cnfDictionaries[0])
+        rules = (cnfPen, cnfPoss, cnfQual)
+        logic = brain()
+        output = logic.exemplify(feasibleObjects[0], rules)
+        claspObj = output[0]
+        objects = revertClasp(cnfDictionaries[1], claspObj)
+
+        ob1 = StringVar()
+        ob2 = StringVar()
+        obPen = StringVar()
+        obPoss = StringVar()
+        obQual = StringVar()
+        ob1.set(objects[0])
+        ob2.set(objects[1])
+        if int(output[1]) == 1:
+            obPen.set("Object 1")
+        elif int(output[1]) == 2:
+            obPen.set("Object 2")
+        else:
+            obPen.set("Neither")
+        if int(output[2]) == 1:
+            obPoss.set("Object 1")
+        elif int(output[2]) == 2:
+            obPoss.set("Object 2")
+        else:
+            obPoss.set("Neither")
+        #obQual.set(objects[int(output[3])])
+
+        ob1Label = Label(exemp_win, text="Object 1")
+        ob2Label = Label(exemp_win, text= "Object2")
+        prefLabelFrame = LabelFrame(exemp_win, text= "Objects with Higher Preference", padx=10,pady=10)
+        penLabel = Label(prefLabelFrame, text="Penalty Logic")
+        possLabel = Label(prefLabelFrame, text="Possiblistic Logic")
+        qualLabel = Label(prefLabelFrame, text="Qualitative Choice Logic")
+
+        ob1Entry = Entry(exemp_win, textvariable=ob1, state=DISABLED, width=50)
+        ob2Entry = Entry(exemp_win, textvariable=ob2, state=DISABLED, width=50)
+
+        penEntry = Entry(prefLabelFrame, textvariable=obPen, state=DISABLED)
+        possEntry = Entry(prefLabelFrame, textvariable=obPoss, state=DISABLED)
+        qualEntry = Entry(prefLabelFrame, textvariable=obQual, state=DISABLED)
+
+        ob1Label.grid(row=0,column=0)
+        ob2Label.grid(row=0,column=1)
+        ob1Entry.grid(row=1,column=0)
+        ob2Entry.grid(row=1,column=1)
+
+        prefLabelFrame.grid(row=2)
+        penLabel.grid(row=0,column=0)
+        possLabel.grid(row=1,column=0)
+        qualLabel.grid(row=2,column=0)
+        penEntry.grid(row=0,column=1)
+        possEntry.grid(row=1,column=1)
+        qualEntry.grid(row=2,column=1)
+    else:
+        messagebox.showinfo("ERROR: No Feasible Objects", "Please make sure you have generated the feasible objects.")
+    
+
+    
+    
+    
+    #list(two tuple with two objects, which object is prefered)
 
 #pop up window for optimize
 def optimize():
@@ -177,7 +244,7 @@ def hardConstr_add():
         hardConstr_lbox.insert(END, userHardConstr)
         hardConstr_entr_constr.delete(0,END)
         hardConstraints.append(userHardConstr)
-        print(hardConstraints)
+        #print(hardConstraints)
 
 def pen_add():
     userPenalty = pen_entr_pref.get()
@@ -255,7 +322,7 @@ def updateAttr():
             " incrementing & reseting "
             readattr = attrfile.readline()
             parseattr[:] = []
-    print(attrOptions)
+    #print(attrOptions)
         
 def updateHardConstr():
         with open ('constraints.txt') as constrfile:
@@ -276,7 +343,7 @@ def updatePenalty():
             penParse = readPen.split(",")
             penParse[1] = penParse[1].replace(" ","")
             readPen = penParse[0] + "," + penParse[1]
-            print(readPen)
+            #print(readPen)
             pref_penalty.append(readPen)
             readPen = penFile.readline()
     #print(pref_penalty)
@@ -290,7 +357,7 @@ def updatePossible():
             possParse = readPoss.split(",")
             possParse[1] = possParse[1].replace(" ","")
             readPoss = possParse[0] + "," + possParse[1]
-            print(readPoss)
+            #print(readPoss)
             pref_possible.append(readPoss)
             readPoss = possFile.readline()
     #print(pref_possible)
@@ -307,14 +374,29 @@ def updateQuality():
 
 def updateFeasObj():
     cnf = middleMan()
-    cnfDictionary = cnf.updateDictionary(attrOptions)
-    cnfConstraints = cnf.cnfConstraints(hardConstraints, cnfDictionary)
+    cnfDictionaries = cnf.updateDictionary(attrOptions) #[0] is passed to objects, [1] is reversed for outputs
+    cnfReverse = cnfDictionaries[1]
+    #print(cnfDictionaries[0])
+    #print(cnfReverse)
+    cnfConstraints = cnf.cnfConstraints(hardConstraints, cnfDictionaries[0])
     logic = brain()
     feasObj = logic.createFeasibleObjects(cnfConstraints)
-    print(feasObj)
-    # print(cnfDictionary)
-    # print(cnfConstraints)
+    feasibleObjects.append(feasObj)
+    #print(feasibleObjects)
+    objects = revertClasp(cnfReverse, feasibleObjects[0])
+    for obj in objects:
+        feasObj_lbox.insert(END, obj)
     
+def revertClasp(cnfReverse, feasibleObjectList):
+    revertedObj = []
+    for obj in feasibleObjectList:
+        output = ""
+        items = obj.split()
+        for item in items:
+            output = output + " " + str(cnfReverse[int(item)])
+        output = output[1:]
+        revertedObj.append(output)
+    return revertedObj
 """END UPDATE WITH FILE INFO"""
 
 """RESET METHOD"""
@@ -347,7 +429,7 @@ binAtr_frame.grid(row=0, column=0, padx=10)
 binAtr_frame2.grid(row=0, column=2, sticky='ns')
 
 #binary attribute frame 1
-binAtr_lbox = tk.Listbox(binAtr_frame, width=50)
+binAtr_lbox = tk.Listbox(binAtr_frame, width=40)
 binAtr_lbox.grid(row=0,column=0)
 binAtr_scroll = Scrollbar(binAtr_frame, orient='vertical', command=binAtr_lbox.yview)
 binAtr_scroll.grid(row=0, column=1, sticky='ns')
@@ -383,7 +465,7 @@ hardConstr_frame.grid(row=0, column=1, padx=10)
 hardConstr_frame2.grid(row=0, column=2, sticky='ns')
 
 #frame1
-hardConstr_lbox = tk.Listbox(hardConstr_frame)
+hardConstr_lbox = tk.Listbox(hardConstr_frame, width=40)
 hardConstr_lbox.grid(row=0, column=0)
 hardConstr_scroll = Scrollbar(hardConstr_frame, orient='vertical', command=hardConstr_lbox.yview)
 hardConstr_scroll.grid(row=0, column=1, sticky='ns')
@@ -408,7 +490,7 @@ hardConstr_fileButton.grid(row=3, column=0)
 feasObj_frame = LabelFrame(top, text="Feasible Objects", padx=10, pady=10)
 feasObj_frame.grid(row=0, column=3)
 
-feasObj_lbox = Listbox(feasObj_frame)
+feasObj_lbox = Listbox(feasObj_frame, width=40)
 feasObj_lbox.grid(row=0, column=0)
 feasObj_scroll = Scrollbar(feasObj_frame, orient='vertical', command=feasObj_lbox.yview)
 feasObj_scroll.grid(row=0, column=1, sticky='ns')
@@ -430,7 +512,7 @@ pen_frame.grid(row=0, column=0, padx=10)
 pen_frame2.grid(row=0, column=2,sticky='ns')
 
 #penalty frame1
-pen_lbox = Listbox(pen_frame, width=50)
+pen_lbox = Listbox(pen_frame, width=40)
 pen_lbox.grid(row=0, column=0)
 pen_scroll = Scrollbar(pen_frame, orient='vertical', command=pen_lbox.yview)
 pen_scroll.grid(row=0, column=1, sticky='ns')
@@ -461,7 +543,7 @@ poss_frame.grid(row=0, column=1, padx=10)
 poss_frame2.grid(row=0, column=2,sticky='ns')
 
 #possibilistic frame1
-poss_lbox = Listbox(poss_frame)
+poss_lbox = Listbox(poss_frame, width=40)
 poss_lbox.grid(row=0, column=0)
 poss_scroll = Scrollbar(poss_frame, orient='vertical', command=poss_lbox.yview)
 poss_scroll.grid(row=0, column=1, sticky='ns')
@@ -486,13 +568,13 @@ poss_fileButton.grid(row=3, column=0)
 
 """QUALITATIVE (PREFERENCE 3)"""
 #qualitative frames
-qual_frame = LabelFrame(pref_frame, text="Possibilistic Logic", padx=10, pady=10)
+qual_frame = LabelFrame(pref_frame, text="Qualitative Choice Logic", padx=10, pady=10)
 qual_frame2 = Frame(qual_frame)
 qual_frame.grid(row=0, column=2, padx=10)
 qual_frame2.grid(row=0, column=2,sticky='ns')
 
 #qualitiative frame1
-qual_lbox = Listbox(qual_frame)
+qual_lbox = Listbox(qual_frame, width=40)
 qual_lbox.grid(row=0, column=0)
 qual_scroll = Scrollbar(qual_frame, orient='vertical', command=qual_lbox.yview)
 qual_scroll.grid(row=0, column=1, sticky='ns')
