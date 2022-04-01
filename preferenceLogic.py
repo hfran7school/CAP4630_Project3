@@ -2,6 +2,7 @@ import subprocess as sp
 import os
 import sys
 import random
+import platform
 
 class Node:
     """
@@ -65,7 +66,7 @@ class Logic:
         # Populate result list
         for i in objPens:
             j = self.findIndex(penalties, i[1])
-            temp[j].append(i[0])
+            temp[j].append(i)
 
         # Convert result list into a list of tuples
         result = []
@@ -205,9 +206,12 @@ class Logic:
             for i in enumAttr:
                 condFile.write(i + " 0\n")
             condFile.close()
-            condOut = sp.run('clingo --mode=clasp condition.cnf --verbose=1', shell=True, capture_output=True)
+            if platform.system() == "Windows":
+                condOut = sp.run('.\clingo.exe --mode=clasp condition.cnf --verbose=1', shell=True, capture_output=True)
+            else:
+                condOut = sp.run('clasp condition.cnf --verbose=1', shell=True, capture_output=True)
             condString = str(condOut.stdout)
-            os.remove('condition.cnf')
+            # os.remove('condition.cnf')
             if "UNSATISFIABLE" in condString:
                 return inf
 
@@ -264,14 +268,19 @@ class Logic:
         for i in items:
             fp.write(i + " 0\n")
         fp.close()
-        claspOut = sp.run('clingo --mode=clasp checkRule.cnf --verbose=0', shell=True, capture_output=True)
+        if platform.system() == "Windows":
+            claspOut = sp.run('.\clingo.exe --mode=clasp checkRule.cnf --verbose=0', shell=True, capture_output=True)
+        else:
+            claspOut = sp.run('clasp checkRule.cnf --verbose=0', shell=True, capture_output=True)
         claspString = str(claspOut.stdout)
-        os.remove("checkRule.cnf")
 
         if "UNSATISFIABLE" in claspString:
-            return 0
+            result = 0
         else:
-            return 1
+            result = 1
+
+        # os.remove("checkRule.cnf")
+        return result
 
     def min(self, inp: list[int]) -> int:
         result = sys.maxsize
@@ -344,7 +353,9 @@ class Logic:
         :return: a list containing tuples of the optimal objects for each logic, in order (penalty, possibilistic, qualitative)
         """
         penaltyOptimal = self.determinePenaltyPreference(feasibleObjects, rules[0])
+        print("Number of optimal objects for penalty: " + str(penaltyOptimal))
         possibilisitcOptimal = self.determinePossibilisticPreference(feasibleObjects, rules[1])
+        print("Number of optimal objects for possibilistic: " + str(possibilisitcOptimal))
         nodes = self.qualitativeLogic(feasibleObjects, rules[2])
         for x in nodes:
             if len(x.worseThan) == 0:
@@ -369,12 +380,17 @@ class Logic:
 
     def createFeasibleObjects(self, constraints):
         """Returns a list of all feasible objects, represented in clasp output"""
+        print("Input to createFeasibleObjects: " + constraints)
         fp = open('feasible.cnf', 'w')
         fp.write(constraints)
         fp.close()
-        claspOut = sp.run('clingo --mode=clasp feasible.cnf -n 0 --verbose=0', shell=True, capture_output=True)
+        if platform.system() == "Windows":
+            claspOut = sp.run('.\clingo.exe --mode=clasp feasible.cnf -n 0 --verbose=0', shell=True, capture_output=True)
+        else:
+            # Note to grader: none of us had a Unix machine, so we don't know if this line will work. We do know that it works on Windows.
+            claspOut = sp.run('clasp feasible.cnf -n 0 --verbose=0', shell=True, capture_output=True)
         claspString = str(claspOut.stdout)
-        os.remove("feasible.cnf")
+        # os.remove("feasible.cnf")
 
         if "UNSATISFIABLE" in claspString:
             return []
@@ -384,6 +400,8 @@ class Logic:
         tempA = len(solns) - 1
         tempB = solns[tempA].split(" 0\\r\\n")
         solns[tempA] = tempB[0]
+
+        print("There are " + str(len(solns)) + " feasible objects.")
 
         return solns
 
@@ -396,9 +414,12 @@ class Logic:
         fp = open('allattr.cnf', 'w')
         fp.write('p cnf ' + str(numAttr) + ' 0')
         fp.close()
-        claspOut = sp.run('clingo --mode=clasp allattr.cnf -n 0 --verbose=0', shell=True, capture_output=True)
+        if platform.system() == "Windows":
+            claspOut = sp.run('.\clingo.exe --mode=clasp allattr.cnf -n 0 --verbose=0', shell=True, capture_output=True)
+        else:
+            claspOut = sp.run('clasp allattr.cnf -n 0 --verbose=0', shell=True, capture_output=True)
         claspString = str(claspOut.stdout)
-        os.remove("allattr.cnf")
+        # os.remove("allattr.cnf")
         unquote = claspString.split("\'v ")
         solns = unquote[1].split(" 0\\r\\nv ")
         tempA = len(solns) - 1

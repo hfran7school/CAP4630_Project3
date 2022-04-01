@@ -6,7 +6,7 @@ Authors: Hailey Francis, Jacob McGee, Edward Hage
 - (Have not decided if the files will be cleared or deleted on program close)
 
 # Instructions
-- Make sure main.py, inputs.py, and preferenceLogic.py are in the same directory
+- Make sure main.py, inputs.py, and preferenceLogic.py are in the same directory. For Windows users, ensure clingo.exe is in the same folder as the other Python files.
 - Run "python main.py" in command line to open the User Interface.
 
 - To add the binary attributes you wish to use, put the attribute name in the "Attribute" box, and put the two binary options in "Option 1" and "Option 2", then click the "Add Attribute" button.
@@ -24,11 +24,11 @@ This will add your binary attribute in a list for you to see, as well as write i
 
 - To get a list of feasible objects, once you have your binary attributes and hard constraints added, click the "Update" button in Feasible Objects section to generate the list of all feasible objects w.r.t. the hard constraints you have.
 
-- Clicking the "Exemplify" button...
+- Clicking the "Exemplify" button will choose two random feasible objects and determine, through penalty, possibilistic, and qualitative logic, which one is preferred over the other.
 
-- Clicking the "Optimize" button...
+- Clicking the "Optimize" button will choose a feasible object that is the most optimal with respect to the penalty, possibilistic, and qualitative logic rules provided.
 
-- Clicking the "Omni-Optimize" button...
+- Clicking the "Omni-Optimize" button does the same as optimize, but instead displays all optimal feasible objects.
 
 - This program does not support the deletion of individual attributes, constraints, and preferences. If you would like to restart, click the "Reset" button to clear the data in all lists as well as the associated files.
 
