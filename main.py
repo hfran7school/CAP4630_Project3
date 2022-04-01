@@ -4,9 +4,6 @@ from tkinter import messagebox
 from inputs import Inputs as middleMan
 from preferenceLogic import Logic as brain
 
-#TODO:
-# - ALL OF omni
-
 BA_Options = [] #for error checking if the option name already exists
 attrOptions = [] #list of options for each attribute seperated by a comma
 hardConstraints = [] #list of hard constraints (string)
@@ -15,14 +12,18 @@ pref_possible = [] #list of possiblistic logic
 pref_qualitative = [] #list of qualitative logic
 feasibleObjects = [] #feasible objects (clasp)
 
-root = tk.Tk()
+root = tk.Tk() #establishing root window
 root.title("CAP4630 Project 3")
-
-"""METHOD DEFINITIONS"""
 
 """TASK METHOD DEFINITIONS"""
 #pop up window for exemplify
 def exemplify():
+    """
+    Chooses two random feasible objects and, using the different preference logics,
+    returns the object that is more preferred.
+    param: N/A (info either generated in-function or recieved from outer scope)
+    :return: N/A (window opens)
+    """
     if len(pref_penalty) != 0 and len(pref_possible) != 0 and len(pref_qualitative) != 0 and len(feasibleObjects) != 0:
         exemp_win = Toplevel(taskFrame)
         exemp_win.title("Exemplify")
@@ -104,6 +105,12 @@ def exemplify():
     
 #pop up window for optimize
 def optimize():
+    """
+    From the feasible objects that are currently generated, will display an optimal object for each of the
+    three preference logics.
+    :param: N/A (info either generated in-function or recieved from outer scope)
+    :return: N/A (window opens)
+    """
     if len(pref_penalty) != 0 and len(pref_possible) != 0 and len(pref_qualitative) != 0 and len(feasibleObjects) != 0:
         messagebox.showinfo("Load Warning", "This process may take a while. A window will pop up with the results when ready. \n(To start the computation, please press \"OK\")")
         op_win = Toplevel(taskFrame)
@@ -142,6 +149,12 @@ def optimize():
 
 #pop up window for omni-optimize
 def omni():
+    """
+    From the feasible objects that are currently generated, will display all feasible objects w.r.t
+    each of the three preference logics.
+    :param: N/A (info either generated in-function or recieved from outer scope)
+    :return: N/A (window opens)
+    """
     if len(pref_penalty) != 0 and len(pref_possible) != 0 and len(pref_qualitative) != 0 and len(feasibleObjects) != 0:
         messagebox.showinfo("Load Warning", "This process may take a while. A window will pop up with the results when ready. \n(To start the computation, please press \"OK\")")
         omni_win = Toplevel(taskFrame)
@@ -164,24 +177,33 @@ def omni():
         omniPossPLabel = Label(omni_win, text="Possibilistic Logic").grid(row=0,column=2)
         omniQualLabel = Label(omni_win, text="Qualitative Choice Logic").grid(row=0,column=4)
 
-        omniPen_lbox = Listbox(omni_win, width=40)
-        omniPoss_lbox = Listbox(omni_win, width=40)
-        omniQual_lbox = Listbox(omni_win, width=40)
+        omniPen_lbox = Listbox(omni_win, width=60)
+        omniPoss_lbox = Listbox(omni_win, width=60)
+        omniQual_lbox = Listbox(omni_win, width=60)
 
-        omniPen_scroll = Scrollbar(omni_win, orient='vertical', command=omniPen_lbox.yview)
-        omniPen_lbox['yscrollcommand'] = omniPen_scroll.set
+        omniPen_scrollV = Scrollbar(omni_win, orient='vertical', command=omniPen_lbox.yview)
+        omniPen_lbox['yscrollcommand'] = omniPen_scrollV.set
         omniPen_lbox.grid(row=1,column=0)
-        omniPen_scroll.grid(row=1, column=1, sticky='ns')
+        omniPen_scrollV.grid(row=1, column=1, sticky='ns')
+        omniPen_scrollH = Scrollbar(omni_win, orient='horizontal', command=omniPen_lbox.xview)
+        omniPen_lbox['xscrollcommand'] = omniPen_scrollH.set
+        omniPen_scrollH.grid(row=2, column=0, sticky='ew')
 
         omniPoss_scroll = Scrollbar(omni_win, orient='vertical', command=omniPoss_lbox.yview)
         omniPoss_lbox['yscrollcommand'] = omniPoss_scroll.set
         omniPoss_lbox.grid(row=1,column=2)
         omniPoss_scroll.grid(row=1, column=3, sticky='ns')
+        omniPoss_scrollH = Scrollbar(omni_win, orient='horizontal', command=omniPoss_lbox.xview)
+        omniPoss_lbox['xscrollcommand'] = omniPoss_scrollH.set
+        omniPoss_scrollH.grid(row=2, column=2, sticky='ew')
 
         omniQual_scroll = Scrollbar(omni_win, orient='vertical', command=omniQual_lbox.yview)
         omniQual_lbox['yscrollcommand'] = omniQual_scroll.set
         omniQual_lbox.grid(row=1,column=4)
         omniQual_scroll.grid(row=1, column=5, sticky='ns')
+        omniQual_scrollH = Scrollbar(omni_win, orient='horizontal', command=omniQual_lbox.xview)
+        omniQual_lbox['xscrollcommand'] = omniQual_scrollH.set
+        omniQual_scrollH.grid(row=2, column=4, sticky='ew')
 
         for obj in objs_pen:
             omniPen_lbox.insert(END, obj)
@@ -196,6 +218,13 @@ def omni():
 
 """ERROR CHECKING"""
 def check_valid(test, qual):
+    """
+    Will check to see if the given input is a valid conditional is valid given
+    current binary attributes.
+    :param test: conditional statement in the form of a string
+    :param qual: boolean value to determine if the conditional is qualitative logic or not
+    :return: N/A (window opens)
+    """
     not_item = False
     need_item = True
     need_comparison = False
