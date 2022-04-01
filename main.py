@@ -105,7 +105,7 @@ def exemplify():
 #pop up window for optimize
 def optimize():
     if len(pref_penalty) != 0 and len(pref_possible) != 0 and len(pref_qualitative) != 0 and len(feasibleObjects) != 0:
-        messagebox.showinfo("Load Warning", "This process may take a while. A window will pop up with the results when ready. (Please close this window and wait for the window.)")
+        messagebox.showinfo("Load Warning", "This process may take a while. A window will pop up with the results when ready. \n(To start the computation, please press \"OK\")")
         op_win = Toplevel(taskFrame)
         op_win.title("Optimal Objects for Each Preference")
 
@@ -133,9 +133,9 @@ def optimize():
         opPossPLabel = Label(op_win, text="Possibilistic Logic").grid(row=1,column=0)
         opQualLabel = Label(op_win, text="Qualitative Choice Logic").grid(row=2,column=0)
 
-        opPenEntry = Entry(op_win, textvariable=obPen, state=DISABLED,width=50).grid(row=0,column=1)
-        opPossEntry = Entry(op_win, textvariable=obPoss, state=DISABLED,width=50).grid(row=1,column=1)
-        opQualEntry = Entry(op_win, textvariable=obQual, state=DISABLED,width=50).grid(row=2,column=1)
+        opPenEntry = Entry(op_win, textvariable=obPen, state=DISABLED,width=100).grid(row=0,column=1)
+        opPossEntry = Entry(op_win, textvariable=obPoss, state=DISABLED,width=100).grid(row=1,column=1)
+        opQualEntry = Entry(op_win, textvariable=obQual, state=DISABLED,width=100).grid(row=2,column=1)
         
     else:
         messagebox.showinfo("ERROR: Preferences/Feasible Objects Empty", "Please make sure you've generated all preferences and feasible objects.")
@@ -143,7 +143,7 @@ def optimize():
 #pop up window for omni-optimize
 def omni():
     if len(pref_penalty) != 0 and len(pref_possible) != 0 and len(pref_qualitative) != 0 and len(feasibleObjects) != 0:
-        messagebox.showinfo("Load Warning", "This process may take a while. A window will pop up with the results when ready. (Please close this window and wait for the window.)")
+        messagebox.showinfo("Load Warning", "This process may take a while. A window will pop up with the results when ready. \n(To start the computation, please press \"OK\")")
         omni_win = Toplevel(taskFrame)
         omni_win.title("Omni-Optimize")
 
