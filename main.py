@@ -105,9 +105,9 @@ def exemplify():
 #pop up window for optimize
 def optimize():
     if len(pref_penalty) != 0 and len(pref_possible) != 0 and len(pref_qualitative) != 0 and len(feasibleObjects) != 0:
+        messagebox.showinfo("Load Warning", "This process may take a while. A window will pop up with the results when ready. (Please close this window and wait for the window.)")
         op_win = Toplevel(taskFrame)
         op_win.title("Optimal Objects for Each Preference")
-
 
         cnf = middleMan()
         cnfDictionaries = cnf.updateDictionary(attrOptions)
@@ -143,6 +143,7 @@ def optimize():
 #pop up window for omni-optimize
 def omni():
     if len(pref_penalty) != 0 and len(pref_possible) != 0 and len(pref_qualitative) != 0 and len(feasibleObjects) != 0:
+        messagebox.showinfo("Load Warning", "This process may take a while. A window will pop up with the results when ready. (Please close this window and wait for the window.)")
         omni_win = Toplevel(taskFrame)
         omni_win.title("Omni-Optimize")
 
