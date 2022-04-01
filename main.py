@@ -223,7 +223,7 @@ def check_valid(test, qual):
     current binary attributes.
     :param test: conditional statement in the form of a string
     :param qual: boolean value to determine if the conditional is qualitative logic or not
-    :return: N/A (window opens)
+    :return: integer value that is associated with error message for error_checking function
     """
     not_item = False
     need_item = True
@@ -299,8 +299,12 @@ def check_valid(test, qual):
         else:
             return 0
 
-
 def error_checking(num):
+    """
+    Makes a pop-up window with corresponding error message for the conditionals from check_valid function.
+    :param num: integer value from check_valid corresponding to each error message (1-9)
+    :return: N/A (pop-up window)
+    """
     if num == 1:
         messagebox.showinfo("ERROR: Syntax", "There cannot be more than two NOT statements used in a row.")
         return
@@ -328,8 +332,15 @@ def error_checking(num):
     elif num == 9:
         messagebox.showinfo("ERROR: Syntax", "Qualitative logic needs an IF statement -- even if there's no condition")
 
+"""END ERROR CHECKING"""
+
 """ADD BUTTON DEFINITIONS"""
 def binAtr_add():
+    """
+    Adds an attribute from the user input from the GUI, making it into objects to use later.
+    :param: N/A (variables either in outer scope or in GUI entry field)
+    :return: N/A (will add object if no errors, will make error message if not all entry boxes are filled)
+    """
     userAtr = binAtr_entr_attr.get()
     userAtr = userAtr.replace(" ","-")
     userOp1 = binAtr_entr_op1.get()
@@ -350,6 +361,11 @@ def binAtr_add():
         messagebox.showinfo("ERROR: Binary Attributes","Please fill in all entries before entering a binary attribute.")
     
 def hardConstr_add():
+    """
+    Adds a hard constraint from the user input from the GUI, making it into objects to use later.
+    :param: N/A (variables either in outer scope or in GUI entry field)
+    :return: N/A (will add object if no errors, will make error message pop-up if error encountered)
+    """
     userHardConstr = hardConstr_entr_constr.get()
     result = check_valid(userHardConstr, False)
     if result == 0:
@@ -359,6 +375,11 @@ def hardConstr_add():
         #print(hardConstraints)
 
 def pen_add():
+    """
+    Adds a penalty preference from the user input from the GUI, making it into objects to use later.
+    :param: N/A (variables either in outer scope or in GUI entry field)
+    :return: N/A (will add object if no errors, will make error message pop-up if error encountered)
+    """
     userPenalty = pen_entr_pref.get()
     userValue = pen_entr_val.get()
     if userValue.isnumeric() == False:
@@ -373,6 +394,11 @@ def pen_add():
             pen_entr_val.delete(0, END)
 
 def poss_add():
+    """
+    Adds a possibilistic preference from the user input from the GUI, making it into objects to use later.
+    :param: N/A (variables either in outer scope or in GUI entry field)
+    :return: N/A (will add object if no errors, will make error message pop-up if error encountered)
+    """
     userPoss = poss_entr_pref.get()
     userValue = poss_entr_val.get()
     val = False
@@ -397,6 +423,11 @@ def poss_add():
             poss_entr_val.delete(0, END)
 
 def qual_add():
+    """
+    Adds a wualitative choice logic preference from the user input from the GUI, making it into objects to use later.
+    :param: N/A (variables either in outer scope or in GUI entry field)
+    :return: N/A (will add object if no errors, will make error message pop-up if error encountered)
+    """
     userQual = qual_entr_pref.get()
     result = check_valid(userQual, True)
     if result == 0:
@@ -408,6 +439,11 @@ def qual_add():
 
 """UPDATE WITH FILE INFO"""
 def updateAttr():
+    """
+    Opens attributes.txt and makes them into attribute/options objects that are used later.
+    :param: N/A (file opened in function, GUI objects within outer scope)
+    :return: N/A (objects added to respective lists in outer scope)
+    """
     with open ('attributes.txt') as attrfile:
         readattr = attrfile.readline()
         attrnames = []
@@ -437,16 +473,26 @@ def updateAttr():
     #print(attrOptions)
         
 def updateHardConstr():
-        with open ('constraints.txt') as constrfile:
+    """
+    Opens constraints.txt and makes them into hard constraints objects that are used later.
+    :param: N/A (file opened in function, GUI objects within outer scope)
+    :return: N/A (objects added to respective lists in outer scope)
+    """
+    with open ('constraints.txt') as constrfile:
+        readconstr = constrfile.readline()
+        while readconstr != '':
+            readconstr = readconstr.replace("\n","")
+            hardConstraints.append(readconstr)
+            hardConstr_lbox.insert(END, readconstr)
             readconstr = constrfile.readline()
-            while readconstr != '':
-                readconstr = readconstr.replace("\n","")
-                hardConstraints.append(readconstr)
-                hardConstr_lbox.insert(END, readconstr)
-                readconstr = constrfile.readline()
     #print(hardConstraints)
 
 def updatePenalty():
+    """
+    Opens penalty.txt and makes them into penalty preference objects that are used later.
+    :param: N/A (file opened in function, GUI objects within outer scope)
+    :return: N/A (objects added to respective lists in outer scope)
+    """
     with open("penalty.txt") as penFile:
         readPen = penFile.readline()
         while readPen != '':
@@ -461,6 +507,11 @@ def updatePenalty():
     #print(pref_penalty)
 
 def updatePossible():
+    """
+    Opens possible.txt and makes them into possibilistic preference objects that are used later.
+    :param: N/A (file opened in function, GUI objects within outer scope)
+    :return: N/A (objects added to respective lists in outer scope)
+    """
     with open("possible.txt") as possFile:
         readPoss = possFile.readline()
         while readPoss != '':
@@ -475,6 +526,11 @@ def updatePossible():
     #print(pref_possible)
 
 def updateQuality():
+    """
+    Opens qualitative.txt and makes them into qualitative choice preference objects that are used later.
+    :param: N/A (file opened in function, GUI objects within outer scope)
+    :return: N/A (objects added to respective lists in outer scope)
+    """
     with open("qualitative.txt") as qualFile:
         readQual = qualFile.readline()
         while readQual != '':
@@ -485,6 +541,12 @@ def updateQuality():
     #print(pref_qualitative)
 
 def updateFeasObj():
+    """
+    Makes a list of feasible objects from all of the current attributes and hard constraints given, adding
+    them to the GUI.
+    :param: N/A (GUI within outer scope, constraints and attributes within outer scrope)
+    :return: N/A (objects added to respective list in outer scope)
+    """
     if len(attrOptions) != 0:
         feasibleObjects.clear()
         feasObj_lbox.delete(0, END)
@@ -502,6 +564,12 @@ def updateFeasObj():
         messagebox.showinfo("Error: No Binary Attributes", "Please make sure you've added binary attributes.")
     
 def revertClasp(cnfReverse, feasibleObjectList):
+    """
+    Takes an object generated in clasp and returns it back in the form of words.
+    :param cnfReverse: a reversed dictionary of the current attribute options in clasp form (key="number", value="option")
+    :param feasibleObjectList: a list of objects in clasp form
+    :return: list of the objects in word form
+    """
     revertedObj = []
     for obj in feasibleObjectList:
         output = ""
@@ -515,6 +583,12 @@ def revertClasp(cnfReverse, feasibleObjectList):
 
 """RESET METHOD"""
 def reset():
+    """
+    Resets all of the relevant lists in the outer scope as well as clears the
+    respective listboxes.
+    :param: N/A (lists and GUI in outer scope)
+    :return: N/A
+    """
     BA_Options.clear() #for error checking if the option name already exists
     attrOptions.clear() #list of options for each attribute seperated by a comma
     hardConstraints.clear() #list of hard constraints (string)
@@ -531,11 +605,11 @@ def reset():
 
 """END RESET METHOD"""
 
-
 """END METHOD DEFINITIONS"""
 
+#top frame to help align with preferences row
 top = Frame(root)
-top.grid(row=0, column=0) #top frame to help align with preferences row
+top.grid(row=0, column=0) 
 
 """START BINARY ATTRIBUTES"""
 #binary attribute frames
@@ -715,6 +789,7 @@ qual_fileButton.grid(row=3, column=0)
 
 """END PREFERENCE"""
 
+"""TASK BUTTONS"""
 #buttons for the other tasks
 taskFrame = Frame(root)
 taskFrame.grid(row=2, column=0)
@@ -736,5 +811,6 @@ b_reset = Button(exitFrame, text="Reset", command=reset)
 b_reset.grid(row=0,column=0)
 b_quit.grid(row=0,column=1)
 
+"""END TASK BUTTONS"""
 
 root.mainloop()
