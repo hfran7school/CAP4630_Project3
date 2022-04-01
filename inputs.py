@@ -1,6 +1,7 @@
 class Inputs:
     """
-        Doc
+    Class outlines functions for updating the cnf dictionary -- used to convert rules to cnf form, collecting
+    hard constraints, and collecting rules for penalty, possibilistic, and qualitative logics.
     """
     def updateDictionary(self, attributes: list):
         """
