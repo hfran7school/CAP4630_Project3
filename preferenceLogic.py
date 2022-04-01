@@ -66,7 +66,7 @@ class Logic:
         # Populate result list
         for i in objPens:
             j = self.findIndex(penalties, i[1])
-            temp[j].append(i)
+            temp[j].append(i[0])
 
         # Convert result list into a list of tuples
         result = []
