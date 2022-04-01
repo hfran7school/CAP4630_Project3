@@ -105,7 +105,6 @@ class Inputs:
                     cnfQual = "p cnf " + str(numattr) + " " + str(numclauses) + "\n" + textformat + " 0"
                     rule.append(cnfQual)
                     textformat = ""
-                    qualnum += 1
                     numclauses = 1
                 else:
                     textformat += str(cnfDict[term])
@@ -115,7 +114,6 @@ class Inputs:
             qualtuples.append(t)
             rule[:] = []
             textformat = ""
-            qualnum = 1
             numclauses = 1
         return qualtuples  # Returns list of tuples in format of [(condition, (cnf, ...)), ...]
         # Condition will be 0 if there are no conditions.
