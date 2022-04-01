@@ -5,7 +5,6 @@ from inputs import Inputs as middleMan
 from preferenceLogic import Logic as brain
 
 #TODO:
-# - ALL OF optimize
 # - ALL OF omni
 
 BA_Options = [] #for error checking if the option name already exists
@@ -58,7 +57,13 @@ def exemplify():
             obPoss.set("Object 2")
         else:
             obPoss.set("Neither")
-        #obQual.set(objects[int(output[3])])
+        if int(output[3]) == 1:
+            obQual.set("Object 1")
+        elif int(output[3]) == 2:
+            obQual.set("Object 2")
+        else:
+            obQual.set("Neither")
+        
 
         ob1Label = Label(exemp_win, text="Object 1")
         ob2Label = Label(exemp_win, text= "Object 2")
@@ -106,15 +111,15 @@ def optimize():
         output = logic.optimize(feasibleObjects[0], rules)
         objects = revertClasp(cnfDictionaries[1], output)
 
-        print(output)
-        print(objects)
+        #print(output)
+        #print(objects)
 
         obPen = StringVar()
         obPoss = StringVar()
         obQual = StringVar()
         obPen.set(objects[0])
         obPoss.set(objects[1])
-        #obQual.set(objects[2])
+        obQual.set(objects[2])
 
         opPenLabel = Label(op_win, text="Penalty Logic").grid(row=0,column=0)
         opPossPLabel = Label(op_win, text="Possibilistic Logic").grid(row=1,column=0)
@@ -129,9 +134,54 @@ def optimize():
 
 #pop up window for omni-optimize
 def omni():
-    omni_win = Toplevel(taskFrame)
-    omni_win.title("Omni-Optimize")
-    # TODO: create layout for omni-optimize
+    if len(pref_penalty) != 0 and len(pref_possible) != 0 and len(pref_qualitative) != 0 and len(feasibleObjects) != 0:
+        omni_win = Toplevel(taskFrame)
+        omni_win.title("Omni-Optimize")
+
+        cnf = middleMan()
+        cnfDictionaries = cnf.updateDictionary(attrOptions)
+        cnfPen = cnf.cnfLogic(pref_penalty, cnfDictionaries[0])
+        cnfPoss = cnf.cnfLogic(pref_possible, cnfDictionaries[0])
+        cnfQual = cnf.cnfQualitative(pref_qualitative, cnfDictionaries[0])
+        rules = (cnfPen, cnfPoss, cnfQual)
+        logic = brain()
+        output = logic.omniOptimize(feasibleObjects[0], rules)
+        
+        objs_pen = revertClasp(cnfDictionaries[1], output[0])
+        objs_poss = revertClasp(cnfDictionaries[1], output[1])
+        objs_qual = revertClasp(cnfDictionaries[1], output[2])
+
+        omniPenLabel = Label(omni_win, text="Penalty Logic").grid(row=0,column=0)
+        omniPossPLabel = Label(omni_win, text="Possibilistic Logic").grid(row=0,column=2)
+        omniQualLabel = Label(omni_win, text="Qualitative Choice Logic").grid(row=0,column=4)
+
+        omniPen_lbox = Listbox(omni_win, width=40)
+        omniPoss_lbox = Listbox(omni_win, width=40)
+        omniQual_lbox = Listbox(omni_win, width=40)
+
+        omniPen_scroll = Scrollbar(omni_win, orient='vertical', command=omniPen_lbox.yview)
+        omniPen_lbox['yscrollcommand'] = omniPen_scroll.set
+        omniPen_lbox.grid(row=1,column=0)
+        omniPen_scroll.grid(row=1, column=1, sticky='ns')
+
+        omniPoss_scroll = Scrollbar(omni_win, orient='vertical', command=omniPoss_lbox.yview)
+        omniPoss_lbox['yscrollcommand'] = omniPoss_scroll.set
+        omniPoss_lbox.grid(row=1,column=2)
+        omniPoss_scroll.grid(row=1, column=3, sticky='ns')
+
+        omniQual_scroll = Scrollbar(omni_win, orient='vertical', command=omniQual_lbox.yview)
+        omniQual_lbox['yscrollcommand'] = omniQual_scroll.set
+        omniQual_lbox.grid(row=1,column=4)
+        omniQual_scroll.grid(row=1, column=5, sticky='ns')
+
+        for obj in objs_pen:
+            omniPen_lbox.insert(END, obj)
+        for obj in objs_poss:
+            omniPoss_lbox.insert(END, obj)
+        for obj in objs_qual:
+            omniQual_lbox.insert(END, obj)
+    else:
+        messagebox.showinfo("ERROR: Preferences/Feasible Objects Empty", "Please make sure you've generated all preferences and feasible objects.")
 
 """END TASK METHOD DEFINITIONS"""
 
@@ -398,16 +448,15 @@ def updateQuality():
 
 def updateFeasObj():
     if len(attrOptions) != 0:
+        feasibleObjects.clear()
+        feasObj_lbox.delete(0, END)
         cnf = middleMan()
         cnfDictionaries = cnf.updateDictionary(attrOptions) #[0] is passed to objects, [1] is reversed for outputs
         cnfReverse = cnfDictionaries[1]
-        #print(cnfDictionaries[0])
-        #print(cnfReverse)
         cnfConstraints = cnf.cnfConstraints(hardConstraints, cnfDictionaries[0])
         logic = brain()
         feasObj = logic.createFeasibleObjects(cnfConstraints)
         feasibleObjects.append(feasObj)
-        #print(feasibleObjects)
         objects = revertClasp(cnfReverse, feasibleObjects[0])
         for obj in objects:
             feasObj_lbox.insert(END, obj)
